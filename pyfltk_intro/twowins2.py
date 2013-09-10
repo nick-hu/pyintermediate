@@ -4,16 +4,16 @@ from fltk import *
 
 
 def but_move_cb(wid):
-    win_dim = [win2.x(), win2.y(), win2.w(), win2.h()]
+    win_dim = (win2.x(), win2.y())
 
     if wid == but_up:
-        win2.resize(win_dim[0], win2.y() - 5, win_dim[2], win_dim[3])
+        win2.position(win_dim[0], win_dim[1] - 5)  # Shorthand
     elif wid == but_down:
-        win2.resize(win_dim[0], win2.y() + 5, win_dim[2], win_dim[3])
+        win2.position(win_dim[0], win_dim[1] + 5)
     elif wid == but_left:
-        win2.resize(win2.x() - 5, win_dim[1], win_dim[2], win_dim[3])
+        win2.position(win_dim[0] - 5, win_dim[1])
     else:
-        win2.resize(win2.x() + 5, win_dim[1], win_dim[2], win_dim[3])
+        win2.position(win_dim[0] + 5, win_dim[1])
 
     win2.label("(" + str(win2.x()) + ", " + str(win2.y()) + ")")
 
@@ -23,20 +23,19 @@ def but_hide_cb(wid):
         win2.hide()
     else:
         win2.show()
-    print win.take_focus()
 
 
 def dimens_cb(wid):
-    win_dim = [win2.x(), win2.y(), win2.w(), win2.h()]
+    win_dim = (win2.x(), win2.y(), win2.w(), win2.h())
 
     if wid == but_tall:
-        win2.resize(win_dim[0], win_dim[1], win_dim[2], win2.h() + 5)
-    elif wid == but_short and win2.h() > 5:
-        win2.resize(win_dim[0], win_dim[1], win_dim[2], win2.h() - 5)
+        win2.resize(win_dim[0], win_dim[1] - 5, win_dim[2], win2.h() + 10)
+    elif wid == but_short and win2.h() > 10:
+        win2.resize(win_dim[0], win_dim[1] + 5, win_dim[2], win2.h() - 10)
     elif wid == but_wide:
-        win2.resize(win_dim[0], win_dim[1], win2.w() + 5, win_dim[3])
-    elif wid == but_shrink and win2.w() > 5:
-        win2.resize(win_dim[0], win_dim[1], win2.w() - 5, win_dim[3])
+        win2.resize(win_dim[0] - 5, win_dim[1], win2.w() + 10, win_dim[3])
+    elif wid == but_shrink and win2.w() > 10:
+        win2.resize(win_dim[0] + 5, win_dim[1], win2.w() - 10, win_dim[3])
 
     dimbox.label(str(win2.w()) + ' x ' + str(win2.h()))
 
@@ -73,9 +72,7 @@ win2 = Fl_Window(500, 500, 200, 200)
 win2.label("(" + str(win2.x()) + ", " + str(win2.y()) + ")")
 
 win2.begin()
-
-dimbox = Fl_Box(5, 5, 100, 20, str(win2.w()) + ' x ' + str(win2.h()))
-
+dimbox = Fl_Box(5, 5, 80, 20, str(win2.w()) + ' x ' + str(win2.h()))
 win2.end()
 
 Fl.scheme("gtk+")
