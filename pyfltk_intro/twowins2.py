@@ -3,76 +3,60 @@
 from fltk import *
 
 
-def but_move_cb(wid):
-    win_dim = (win2.x(), win2.y())
-
-    if wid == but_up:
-        win2.position(win_dim[0], win_dim[1] - 5)  # Shorthand
-    elif wid == but_down:
-        win2.position(win_dim[0], win_dim[1] + 5)
-    elif wid == but_left:
-        win2.position(win_dim[0] - 5, win_dim[1])
-    else:
-        win2.position(win_dim[0] + 5, win_dim[1])
-
-    win2.label("(" + str(win2.x()) + ", " + str(win2.y()) + ")")
-
-
-def but_hide_cb(wid):
-    if win2.visible():
-        win2.hide()
-    else:
-        win2.show()
-
-
-def dimens_cb(wid):
+def buttons_cb(wid, name):
     win_dim = (win2.x(), win2.y(), win2.w(), win2.h())
 
-    if wid == but_tall:
-        win2.resize(win_dim[0], win_dim[1] - 5, win_dim[2], win2.h() + 10)
-    elif wid == but_short and win2.h() > 10:
-        win2.resize(win_dim[0], win_dim[1] + 5, win_dim[2], win2.h() - 10)
-    elif wid == but_wide:
-        win2.resize(win_dim[0] - 5, win_dim[1], win2.w() + 10, win_dim[3])
-    elif wid == but_shrink and win2.w() > 10:
-        win2.resize(win_dim[0] + 5, win_dim[1], win2.w() - 10, win_dim[3])
+    if name == "W":
+        win2.position(win_dim[0], win_dim[1] - 5)  # Shorthand
+    elif name == "S":
+        win2.position(win_dim[0], win_dim[1] + 5)
+    elif name == "A":
+        win2.position(win_dim[0] - 5, win_dim[1])
+    elif name == "D":
+        win2.position(win_dim[0] + 5, win_dim[1])
+    elif name == "I":
+        win2.resize(win_dim[0], win_dim[1] - 5, win_dim[2], win_dim[3] + 10)
+    elif name == "K" and win_dim[3] > 10:
+        win2.resize(win_dim[0], win_dim[1] + 5, win_dim[2], win_dim[3] - 10)
+    elif name == "L":
+        win2.resize(win_dim[0] - 5, win_dim[1], win_dim[2] + 10, win_dim[3])
+    elif name == "J" and win_dim[2] > 10:
+        win2.resize(win_dim[0] + 5, win_dim[1], win_dim[2] - 10, win_dim[3])
+    elif name == "G":
+        color = fl_color_chooser("Pick a color", 255, 255, 255)[1:]
+        win2.color(fl_rgb_color(color[0], color[1], color[2]))
+        win2.redraw()
+    elif name == 'H':
+        if win2.visible():
+            win2.hide()
+        else:
+            win2.show()
 
+    win2.label("(" + str(win2.x()) + ", " + str(win2.y()) + ")")
     dimbox.label(str(win2.w()) + ' x ' + str(win2.h()))
 
+
+labels = ["H", "K", "L", "J", "I", "G", "S", "D", "A", "W"]
+but_pos = [(30, 10), (10, 30), (50, 30), (30, 50), (30, 30)]
+for p in xrange(5):
+    but_pos.append((but_pos[p][0], but_pos[p][1] + 70))
 
 win = Fl_Window(200, 200, 80, 160)
 
 win.begin()
 
-but_up = Fl_Button(30, 10, 20, 20, "&W")
-but_down = Fl_Button(30, 50, 20, 20, "&S")
-but_left = Fl_Button(10, 30, 20, 20, "&A")
-but_right = Fl_Button(50, 30, 20, 20, "&D")
-but_hide = Fl_Button(30, 30, 20, 20, "&H")
-
-but_tall = Fl_Button(30, 80, 20, 20, "&I")
-but_short = Fl_Button(30, 120, 20, 20, "&K")
-but_wide = Fl_Button(50, 100, 20, 20, "&L")
-but_shrink = Fl_Button(10, 100, 20, 20, "&J")
+for pos in but_pos:
+    name = labels.pop()
+    button = Fl_Button(pos[0], pos[1], 20, 20, name)
+    button.shortcut(name.lower())
+    button.callback(buttons_cb, name)
 
 win.end()
 
-but_up.callback(but_move_cb)
-but_down.callback(but_move_cb)
-but_left.callback(but_move_cb)
-but_right.callback(but_move_cb)
-but_hide.callback(but_hide_cb)
-
-but_tall.callback(dimens_cb)
-but_short.callback(dimens_cb)
-but_wide.callback(dimens_cb)
-but_shrink.callback(dimens_cb)
-
-win2 = Fl_Window(500, 500, 200, 200)
-win2.label("(" + str(win2.x()) + ", " + str(win2.y()) + ")")
+win2 = Fl_Window(500, 500, 200, 200, "(500, 500)")
 
 win2.begin()
-dimbox = Fl_Box(5, 5, 80, 20, str(win2.w()) + ' x ' + str(win2.h()))
+dimbox = Fl_Box(5, 5, 80, 20, "200 x 200")
 win2.end()
 
 Fl.scheme("gtk+")
