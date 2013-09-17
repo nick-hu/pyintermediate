@@ -5,28 +5,27 @@ from random import randrange
 
 
 def but_cb(wid):
-    print shown, solved
-
     if wid.label() in solved:
         return
 
-    if len(shown) == 2:
-        print 'foo'
-        for b in shown:
-            b.labeltype(FL_NO_LABEL)
-            b.color(fl_rgb_color(190, 70, 70))
-            b.redraw()
-            shown.remove(b)
+    if len(shown) == 2:  # Hide shown buttons
+        for let in shown[:]:
+            let.labeltype(FL_NO_LABEL)
+            let.color(fl_rgb_color(190, 70, 70))
+            let.redraw()
+            shown.remove(let)
 
-    if wid.labeltype() == FL_NO_LABEL:
+    if wid.labeltype() == FL_NO_LABEL:  # Reveal button
         wid.labeltype(FL_NORMAL_LABEL)
         wid.color(fl_rgb_color(70, 115, 190))
         shown.append(wid)
-        if len(shown) == 2 and shown[0] == shown[1]:
-            solved.append(shown[0].label())
+
+    if len(shown) == 2 and shown[0].label() == shown[1].label():
+        solved.append(shown.pop().label())  # Simultaneously clear shown
+        shown.pop()
 
 
-chars = [chr(o) for o in xrange(ord("A"), ord("R") + 1)] * 2
+chars = [chr(l) for l in xrange(ord("A"), ord("R") + 1)] * 2
 shown, solved = [], []
 
 win = Fl_Window(200, 200, 40*8, 40*8, "Grid 1 Game")

@@ -33,7 +33,7 @@ def buttons_cb(wid, name):
             win2.show()
 
     win2.label("(" + str(win2.x()) + ", " + str(win2.y()) + ")")
-    dimbox.label(str(win2.w()) + ' x ' + str(win2.h()))
+    dimbox.label(str(win2.w()) + " x " + str(win2.h()))
 
 
 labels = ["H", "K", "L", "J", "I", "G", "S", "D", "A", "W"]
