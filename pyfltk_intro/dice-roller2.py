@@ -3,19 +3,23 @@
 from fltk import *
 from random import randrange
 import os.path
+from time import sleep
 
 PATH = os.path.dirname(os.path.abspath(__file__)) + "/dicepics/"
 
 
 def rolldice(wid):
-    total = 0
-    for die in (dicebox1, dicebox2):
-        roll = randrange(1, 7)
-        img = Fl_PNG_Image(PATH + str(roll) + ".png")
-        die.image(img)
-        die.redraw()
-        total = total + roll
-    totalbox.label(str(total))
+    for _ in xrange(10):
+        total = 0
+        for die in (dicebox1, dicebox2):
+            roll = randrange(1, 7)
+            img = Fl_PNG_Image(PATH + str(roll) + ".png")
+            die.image(img)
+            die.redraw()
+            Fl.check()
+            total = total + roll
+        totalbox.label(str(total))
+        sleep(0.1)
 
 win = Fl_Window(200, 200, 270, 175, "Dice")
 win.color(FL_WHITE)
