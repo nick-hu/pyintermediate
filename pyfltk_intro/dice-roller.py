@@ -9,14 +9,12 @@ PATH = os.path.dirname(os.path.abspath(__file__)) + "/dicepics/"
 
 
 def rolldice(wid):
-    total = 0
+    total = []
     for die in (dicebox1, dicebox2):
-        roll = randrange(1, 7)
-        img = Fl_PNG_Image(PATH + str(roll) + ".png")
-        die.image(img)
+        total.append(randrange(1, 7))
+        die.image(Fl_PNG_Image(PATH + str(total[-1]) + ".png"))
         die.redraw()
-        total = total + roll
-    totalbox.label(str(total))
+    totalbox.label(str(sum(total)))
 
 win = Fl_Window(200, 200, 270, 175, "Dice")
 win.color(FL_WHITE)
@@ -27,6 +25,7 @@ dicebox1 = Fl_Box(10, 10, 120, 120)
 dicebox2 = Fl_Box(140, 10, 120, 120)
 rollbut = Fl_Button(10, 140, 50, 25, "Roll")
 rollbut.shortcut(" ")
+rollbut.tooltip("Click or press space to roll the dice")
 rollbut.callback(rolldice)
 totalbox = Fl_Box(225, 140, 50, 25)
 
