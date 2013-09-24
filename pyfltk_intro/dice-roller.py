@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from fltk import *
-from random import randrange
 import os.path
+from random import randrange
+
+from fltk import *
 
 PATH = os.path.dirname(os.path.abspath(__file__)) + "/dicepics/"
 

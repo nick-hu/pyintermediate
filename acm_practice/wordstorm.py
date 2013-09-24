@@ -16,15 +16,16 @@ def validate(word, p):
 
 puzzwords = []
 
-while True:
-    pword = raw_input()
-    if not pword:
-        break
-    puzzword = [c for c in pword]
-    numguess = int(raw_input())
-    guesses = [[c for c in raw_input()] for _ in xrange(numguess)]
+with open('A.in') as infile:
+    while True:
+        pword = infile.readline()
+        if pword == '\n':
+            break
+        puzzword = list(pword[:-1])
+        numguess = int(infile.readline()[:-1])
+        guesses = [list(infile.readline()[:-1]) for _ in xrange(numguess)]
 
-    puzzwords.append((puzzword, guesses))
+        puzzwords.append((puzzword, guesses))
 
 for puzzleword in puzzwords:
     for guess in puzzleword[1]:
