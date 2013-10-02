@@ -3,7 +3,7 @@
 from fltk import *
 
 w, h = 500, 500
-x, y = Fl.w()/2 - w/2, Fl.h()/2 - h/2
+x, y = Fl.w()/2 - w/2, Fl.h()/2 - h/2  # Get width and height of screen
 win = Fl_Window(x, y, w, h, "Window title")  # Creates Fl_Window object
 
 win.begin()  # Widgets below added to win
