@@ -9,30 +9,31 @@ PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 def watch_button(wid):
+    wid.deactivate()
     if wid == start:
         update_time()
-        start.deactivate()
+        reset.deactivate()
         stop.activate()
     if wid == stop:
         Fl.remove_timeout(update_time)
-        stop.deactivate()
         start.activate()
         reset.activate()
     if wid == reset:
-        curr_time[0] = dtime.datetime.min
         stop.deactivate()
-        reset.deactivate()
         start.activate()
+        curr_time[0] = dtime.datetime.min
         timestr = curr_time[0].time().isoformat()
-        watch.label(timestr)
-        watch.redraw()
+        watchdial.label(timestr)
+        watchdial.angle1(180)
+        watchdial.redraw()
 
 
 def update_time():
     curr_time[0] += dtime.timedelta(seconds=1)
     timestr = curr_time[0].time().isoformat()
-    watch.label(timestr)
-    watch.redraw()
+    watchdial.label(timestr)
+    watchdial.angle1(watchdial.angle1() + 6)
+    watchdial.redraw()
     Fl.repeat_timeout(1.0, update_time)
 
 
@@ -46,10 +47,13 @@ win.begin()
 
 watchimg = Fl_Box(25, 15, 200, 267)
 watchimg.image(Fl_PNG_Image(PATH + "/watchface.png"))
-watch = Fl_Box(25, 15, 200, 267, timestr)
-#watch.box(FL_OVAL_BOX)
-#watch.color(fl_rgb_color(220, 220, 220))
-watch.labelsize(24)
+watchdial = Fl_Dial(48, 105, 155, 155)
+watchdial.color(fl_rgb_color(245, 245, 245), fl_rgb_color(255, 100, 100))
+watchdial.angles(0, 360)
+watchdial.angle1(180)
+watchdial.label(timestr)
+watchdial.labelsize(14)
+watchdial.align(FL_ALIGN_CENTER)
 
 start = Fl_Button(15, 300, 75, 30, "&Start")
 start.color(fl_rgb_color(107, 148, 30))
