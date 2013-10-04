@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from sys import exit
 import subprocess as subp
 
 from fltk import *
@@ -21,7 +22,7 @@ def stopmusic(wid):
         playbut.activate()
         wid.deactivate()
     if wid == win:
-        raise SystemExit, "\n\nGoodbye!"
+        exit("\n\nGoodbye!")
 
 ps = []
 
