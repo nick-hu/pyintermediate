@@ -47,11 +47,9 @@ win.begin()
 
 watchimg = Fl_Box(25, 15, 200, 267)
 watchimg.image(Fl_PNG_Image(PATH + "/watchface.png"))
-watchdial = Fl_Dial(48, 105, 155, 155)
+watchdial = Fl_Dial(48, 105, 155, 155, timestr)
 watchdial.color(fl_rgb_color(245, 245, 245), fl_rgb_color(255, 100, 100))
-watchdial.angles(0, 360)
 watchdial.angle1(180)
-watchdial.label(timestr)
 watchdial.labelsize(14)
 watchdial.align(FL_ALIGN_CENTER)
 
