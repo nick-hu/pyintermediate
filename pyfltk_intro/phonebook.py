@@ -12,11 +12,11 @@ def but_cb(wid, fname):
     if bname == "&Load":
         fname[0] = fl_file_chooser("Pick a database file", "*.txt", PATH)
         if fname[0]:
-            with open(fname[0]) as data:
-                try:
+            try:
+                with open(fname[0]) as data:
                     tbook.update(cPickle.load(data))
-                except:
-                    tbook.clear()
+            except:
+                tbook.clear()
 
     elif tbook:
         if bname == "&Save as":
@@ -56,14 +56,15 @@ win.color(FL_WHITE)
 win.begin()
 
 but_labels = ["&Load", "&Save as", "&Add/Edit", "&Remove"]
-but_colors = [col(80, 190, 50), col(250, 210, 65), col(50, 160, 255),
-              col(255, 50, 50)]
+but_colors = [col(80, 190, 50), col(240, 185, 0), col(50, 160, 255),
+              col(215, 55, 10)]
 for x in xrange(4):
     but = Fl_Button(10 + 121 * x, 10, 115, 30, but_labels.pop(0))
     but.color(but_colors.pop(0))
     but.callback(but_cb, fname)
 
 brow = Fl_Hold_Browser(10, 50, 480, 400)
+brow.color(FL_WHITE, col(200, 200, 200))
 brow.callback(get_num)
 numval = Fl_Output(10, 460, 480, 30)
 
