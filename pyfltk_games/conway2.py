@@ -40,14 +40,17 @@ def but_cb(wid):
 
 def update_grid(name="Start"):
     nalive, neighbours = [0] * 83, (-83, -82, -81, -1, 1, 81, 82, 83)
+    check = []
     for cell in xrange(83, 6641):
         n = [cells[cell + addr].state for addr in neighbours].count(True)
         nalive.append(n)
+        if n > 0:
+            check.extend((cell + addr for addr in neighbours))
     nalive = nalive + [0] * 83
     if not any(nalive):
         return
 
-    for cell in xrange(83, 6641):
+    for cell in check:
         if cells[cell].color() != FL_BLACK:
             if nalive[cell] < 2 or nalive[cell] > 3:
                 cells[cell].color(FL_WHITE)
@@ -91,6 +94,8 @@ for y in xrange(5):
 genbox = Fl_Value_Output(830, 250, 100, 30, "Generation")
 genbox.color(FL_WHITE)
 genbox.align(FL_ALIGN_TOP)
+speed = Fl_Value_Slider(830, 300, 100, 30, "Speed")
+speed.type(FL_HOR_SLIDER)
 
 win.end()
 
