@@ -39,7 +39,7 @@ def update_grid(name="&Start"):
         n = [cells[cell + addr].state for addr in neighbours].count(True)
         nalive.append(n)
         if n > 0:
-            check = check.union(set([cell + addr for addr in neighbours]))
+            check.update(set([cell + addr for addr in neighbours]))
     nalive = nalive + [0] * 203
 
     for cell in check:
