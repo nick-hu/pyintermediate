@@ -4,8 +4,8 @@ from fltk import *
 
 
 class Cell(Fl_Button):
-    def __init__(self, x, y, w, h):
-        Fl_Button.__init__(self, x, y, w, h)
+    def __init__(self, x, y, w, h, s=None):
+        Fl_Button.__init__(self, x, y, w, h, s)
         self.state = False
 
 
@@ -24,37 +24,31 @@ def but_cb(wid):
         update_grid(name)
     elif name == "Sto&p":
         Fl.remove_timeout(update_grid)
-    elif name == "&Clear":
+    else:
         for cell in cells:
             if cell.color() != FL_BLACK:
                 cell.color(FL_WHITE)
                 cell.state = False
                 cell.redraw()
         genbox.value(0)
-    else:
-        boxtype = FL_THIN_DOWN_BOX if wid.value() else FL_FLAT_BOX
-        for cell in cells:
-            if cell.color() != FL_BLACK:
-                cell.box(boxtype)
-                cell.redraw()
     check.clear()
 
 
 def update_grid(name="&Start"):
-    neighbours, nalive = (-83, -82, -81, -1, 1, 81, 82, 83), []
+    neighbours, nalive = (-203, -202, -201, -1, 1, 201, 202, 203), []
 
-    if not check:  # Update with alive cells
-        check.update(a for a in xrange(83, 6641) if cells[a].state)
+    if not check:
+        check.update(a for a in xrange(203, 40601) if cells[a].state)
     newcheck = check.copy()
-    for cell in newcheck:  # Add neighbours of alive cells
+    for cell in newcheck:
         for addr in neighbours:
             if cells[cell + addr].color() != FL_BLACK:
                 check.add(cell + addr)
-    for cell in sorted(check):  # Count neighbours
+    for cell in sorted(check):
         n = [cells[cell + addr].state for addr in neighbours].count(1)
         nalive.append(n)
 
-    for ci, cell in enumerate(sorted(check)):  # Update cells in check
+    for ci, cell in enumerate(sorted(check)):
         if nalive[ci] < 2 or nalive[ci] > 3:
             cells[cell].color(FL_WHITE)
             cells[cell].state = False
@@ -67,47 +61,44 @@ def update_grid(name="&Start"):
             newcheck.add(cell)
 
     check.clear()
-    check.update(newcheck)  # newcheck contains current alive cells!
+    check.update(newcheck)
 
     if name == "&Start":
         Fl.repeat_timeout(speed.value(), update_grid)
     genbox.value(genbox.value() + 1)
 
-
 cells, check = [], set([])
 
-win = Fl_Window(200, 200, 940, 820, "Conway's Game of Life")
+win = Fl_Window(200, 200, 940, 808, "Conway's Game of Life")
 win.color(FL_WHITE)
 
 win.begin()
 
-for y in xrange(82):
-    for x in xrange(82):
-        but = Cell(x * 10, y * 10, 10, 10)
+for y in xrange(202):
+    for x in xrange(202):
+        but = Cell(x * 4, y * 4, 4, 4)
         but.box(FL_FLAT_BOX)
         but.color(FL_WHITE)
-        if y == 0 or y == 81 or x == 0 or x == 81:
+        if y == 0 or y == 201 or x == 0 or x == 201:
             but.color(FL_BLACK)
         else:
             but.callback(cell_cb)
         cells.append(but)
 
-but_labels = ["&Start", "Sto&p", "S&tep", "&Clear", "Show &grid"]
-for y in xrange(5):
+but_labels = ["&Start", "Sto&p", "S&tep", "&Clear"]
+for y in xrange(4):
     but = Fl_Button(830, 10 + y * 40, 100, 30)
     but.label(but_labels.pop(0))
-    if but.label() == "Show &grid":
-        but.type(FL_TOGGLE_BUTTON)
     but.callback(but_cb)
 
-speed = Fl_Value_Slider(830, 225, 100, 20, "Speed")
+speed = Fl_Value_Slider(830, 195, 100, 20, "Speed")
 speed.type(FL_HOR_SLIDER)
 speed.align(FL_ALIGN_TOP)
 speed.value(0.05)
 speed.minimum(0.05)
 speed.step(0.05)
 
-genbox = Fl_Value_Output(830, 300, 100, 30, "Generation")
+genbox = Fl_Value_Output(830, 270, 100, 30, "Generation")
 genbox.color(FL_WHITE)
 genbox.align(FL_ALIGN_TOP)
 
