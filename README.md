@@ -10,6 +10,8 @@ pyfltk_games: Games made with pyFLTK (conway, floodit, etc.)
 
 pyfltk_intro: Introduction to pyFLTK
 
+tests: Programs written for evaluation purposes for this course
+
 -
 Notes:
 
