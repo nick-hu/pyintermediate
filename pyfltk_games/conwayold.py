@@ -19,11 +19,11 @@ def cell_cb(cell):
 
 def but_cb(wid):
     name = wid.label()
-    if name == "&Start" or name == "S&tep":
+    if name == "Start" or name == "Step":
         update_grid(name)
-    elif name == "Sto&p":
+    elif name == "Stop":
         Fl.remove_timeout(update_grid)
-    elif name == "&Clear":
+    elif name == "Clear":
         for cell in cells:
             if cell.color() != FL_BLACK:
                 cell.color(FL_WHITE)
@@ -38,17 +38,14 @@ def but_cb(wid):
                 cell.redraw()
 
 
-def update_grid(name="&Start"):
+def update_grid(name="Start"):
     nalive, neighbours = [0] * 83, (-83, -82, -81, -1, 1, 81, 82, 83)
-    check = set([])
     for cell in xrange(83, 6641):
         n = [cells[cell + addr].state for addr in neighbours].count(True)
         nalive.append(n)
-        if n > 0:
-            check.update(set([cell + addr for addr in neighbours]))
     nalive = nalive + [0] * 83
 
-    for cell in check:
+    for cell in xrange(83, 6641):
         if cells[cell].color() != FL_BLACK:
             if nalive[cell] < 2 or nalive[cell] > 3:
                 cells[cell].color(FL_WHITE)
@@ -59,8 +56,8 @@ def update_grid(name="&Start"):
                 cells[cell].state = True
                 cells[cell].redraw()
 
-    if name == "&Start":
-        Fl.repeat_timeout(speed.value(), update_grid)
+    if name == "Start":
+        Fl.repeat_timeout(0, update_grid)
     genbox.value(genbox.value() + 1)
 
 cells = []
@@ -81,25 +78,19 @@ for y in xrange(82):
             but.callback(cell_cb)
         cells.append(but)
 
-but_labels = ["&Start", "Sto&p", "S&tep", "&Clear", "Show &grid"]
+but_labels = ["Start", "Stop", "Step", "Clear", "Show grid"]
 for y in xrange(5):
     but = Fl_Button(830, 10 + y * 40, 100, 30)
     but.label(but_labels.pop(0))
-    if but.label() == "Show &grid":
+    if but.label() == "Show grid":
         but.type(FL_TOGGLE_BUTTON)
     but.callback(but_cb)
 
-speed = Fl_Value_Slider(830, 225, 100, 20, "Speed")
-speed.type(FL_HOR_SLIDER)
-speed.align(FL_ALIGN_TOP)
-speed.value(0.05)
-speed.minimum(0.05)
-speed.step(0.05)
-
-genbox = Fl_Value_Output(830, 300, 100, 30, "Generation")
+genbox = Fl_Value_Output(830, 250, 100, 30, "Generation")
 genbox.color(FL_WHITE)
 genbox.align(FL_ALIGN_TOP)
 
 win.end()
+
 win.show()
 Fl.run()

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from fltk import *
+import cglpatterns as cglp
 
 
 class Cell(Fl_Button):
@@ -31,12 +32,27 @@ def but_cb(wid):
                 cell.state = False
                 cell.redraw()
         genbox.value(0)
-    else:
+    elif name == "Show &grid":
         boxtype = FL_THIN_DOWN_BOX if wid.value() else FL_FLAT_BOX
         for cell in cells:
             if cell.color() != FL_BLACK:
                 cell.box(boxtype)
                 cell.redraw()
+    else:
+        pattern = fl_input("Pattern to paste:")
+        if pattern not in cglp.patterns:
+            fl_alert("Pattern name not found in cglpatterns!")
+        else:
+            patsize = cglp.size(cglp.patterns[pattern])
+            posinp = fl_input("Coordinates to paste at (x,y):").split(",")
+            posx, posy = int(posinp[0]), int(posinp[1])
+            patx, paty = posx + patsize[0], posy + patsize[1]
+
+            if posx <= 0 or patx >= 82 or posy <= 0 or paty >= 82:
+                fl_alert("Pattern touches edges/does not fit!")
+            else:
+                cglp.paste(pattern, posy * 82 + posx, 82, cells)
+
     check.clear()
 
 
@@ -92,22 +108,22 @@ for y in xrange(82):
             but.callback(cell_cb)
         cells.append(but)
 
-but_labels = ["&Start", "Sto&p", "S&tep", "&Clear", "Show &grid"]
-for y in xrange(5):
+but_labels = ["&Start", "Sto&p", "S&tep", "&Clear", "Show &grid", "&Load"]
+for y in xrange(6):
     but = Fl_Button(830, 10 + y * 40, 100, 30)
     but.label(but_labels.pop(0))
     if but.label() == "Show &grid":
         but.type(FL_TOGGLE_BUTTON)
     but.callback(but_cb)
 
-speed = Fl_Value_Slider(830, 225, 100, 20, "Speed")
+speed = Fl_Value_Slider(830, 275, 100, 20, "Speed")
 speed.type(FL_HOR_SLIDER)
 speed.align(FL_ALIGN_TOP)
 speed.value(0.05)
 speed.minimum(0.05)
 speed.step(0.05)
 
-genbox = Fl_Value_Output(830, 300, 100, 30, "Generation")
+genbox = Fl_Value_Output(830, 350, 100, 30, "Generation")
 genbox.color(FL_WHITE)
 genbox.align(FL_ALIGN_TOP)
 
