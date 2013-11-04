@@ -11,31 +11,40 @@ class Cell(Fl_Button):
 
 
 def cell_cb(cell):
-    if cell.state:
-        cell.color(FL_WHITE)
-    else:
-        cell.color(fl_rgb_color(80, 150, 0))
-    cell.state = not cell.state
-    check.clear()
+    if not running.value():
+        if cell.state:
+            cell.color(FL_WHITE)
+        else:
+            cell.color(fl_rgb_color(80, 150, 0))
+        cell.state = not cell.state
+        check.clear()
 
 
 def but_cb(wid):
     name = wid.label()
-    if name == "&Start" or name == "S&tep":
-        update_grid(name)
-    elif name == "Sto&p":
-        Fl.remove_timeout(update_grid)
-    elif name == "&Clear":
+
+    if name == "&Run":
+        if wid.value():
+            update_grid()
+        else:
+            Fl.remove_timeout(update_grid)
+
+    if running.value():
+        return
+    if name == "&Step":
+        update_grid(False)
+    if name == "&Clear":
         for cell in cells:
             if cell.color() != FL_BLACK:
                 cell.color(FL_WHITE)
                 cell.state = False
                 cell.redraw()
         genbox.value(0)
-    else:
+    if name == "&Load":
         pattern = fl_input("Pattern to paste:")
         if pattern not in cglp.patterns:
-            fl_alert("Pattern name not found in cglpatterns!")
+            if pattern is not None:
+                fl_alert("Pattern name not found in cglpatterns!")
         else:
             patsize = cglp.size(cglp.patterns[pattern])
             posinp = fl_input("Coordinates to paste at (x,y):").split(",")
@@ -50,7 +59,7 @@ def but_cb(wid):
     check.clear()
 
 
-def update_grid(name="&Start"):
+def update_grid(repeat=True):
     neighbours, nalive = (-203, -202, -201, -1, 1, 201, 202, 203), []
 
     if not check:
@@ -79,7 +88,7 @@ def update_grid(name="&Start"):
     check.clear()
     check.update(newcheck)
 
-    if name == "&Start":
+    if repeat:
         Fl.repeat_timeout(speed.value(), update_grid)
     genbox.value(genbox.value() + 1)
 
@@ -101,20 +110,24 @@ for y in xrange(202):
             but.callback(cell_cb)
         cells.append(but)
 
-but_labels = ["&Start", "Sto&p", "S&tep", "&Clear", "&Load"]
-for y in xrange(5):
+but_labels = ["&Run", "&Step", "&Clear", "&Load"]
+for y in xrange(4):
     but = Fl_Button(825, 10 + y * 40, 100, 30)
     but.label(but_labels.pop(0))
+    if y == 0:
+        running = but
+        but.type(FL_TOGGLE_BUTTON)
+        but.color(FL_GRAY, fl_rgb_color(50, 175, 0))
     but.callback(but_cb)
 
-speed = Fl_Value_Slider(825, 250, 100, 20, "Speed")
+speed = Fl_Value_Slider(825, 200, 100, 20, "Speed")
 speed.type(FL_HOR_SLIDER)
 speed.align(FL_ALIGN_TOP)
 speed.value(0.05)
 speed.minimum(0.05)
 speed.step(0.05)
 
-genbox = Fl_Value_Output(825, 325, 100, 30, "Generation")
+genbox = Fl_Value_Output(825, 275, 100, 30, "Generation")
 genbox.color(FL_WHITE)
 genbox.align(FL_ALIGN_TOP)
 
