@@ -6,6 +6,8 @@ ICTP11B intermediate Python course :D
 Course contents and topics:
 ---------------------------
 
+oop: pyFLTK with object-oriented programming introduction
+
 pyfltk_games: Games made with pyFLTK (conway, floodit, etc.)
 
 pyfltk_intro: Introduction to pyFLTK
