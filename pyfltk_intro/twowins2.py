@@ -23,8 +23,8 @@ def buttons_cb(wid, name):
     elif name == "J" and win_dim[2] > 10:
         win2.resize(win_dim[0] + 5, win_dim[1], win_dim[2] - 10, win_dim[3])
     elif name == "G":
-        color = fl_color_chooser("Pick a color", 255, 255, 255)[1:]
-        win2.color(fl_rgb_color(color[0], color[1], color[2]))
+        color = fl_color_chooser("Pick a color", 255, 255, 255)
+        win2.color(fl_rgb_color(*color[1:]))
         win2.redraw()
     elif name == 'H':
         if win2.visible():

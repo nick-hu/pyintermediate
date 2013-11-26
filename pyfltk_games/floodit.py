@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 
-from random import seed, randrange, randint
-from sys import argv
+from random import seed, randrange
+from argparse import ArgumentParser
 
 from fltk import *
 
+import themes
+
+
 class FloodWin(Fl_Window):
 
-    colors = ((240, 60, 60), (250, 150, 40), (240, 215, 0),
-              (40, 180, 0), (45, 150, 255), (155, 90, 250))
-    colors = map(lambda c: fl_rgb_color(c[0], c[1], c[2]), colors)
-
-    def __init__(self, size, randseed):
+    def __init__(self, size, randseed, theme):
+        self.colors = themes.themes[theme]
+        self.colors = map(lambda rgb: fl_rgb_color(*rgb), self.colors)
         seed(randseed)
 
         self.size, h = size, (size+2) * 20
@@ -26,7 +27,7 @@ class FloodWin(Fl_Window):
             for x in xrange(size + 2):
                 cell = Fl_Box(x * 20, y * 20, 20, 20)
                 cell.box(FL_FLAT_BOX)
-                cell.color(FloodWin.colors[randrange(6)])
+                cell.color(self.colors[randrange(6)])
                 if y == 0 or y == size+1 or x == 0 or x == size+1:
                     cell.color(fl_rgb_color(50, 50, 50))
                 self.cells.append(cell)
@@ -36,7 +37,7 @@ class FloodWin(Fl_Window):
                 cbut = Fl_Button(x*25 + h+10, y*25 + 20, 20, 20)
                 cbut.box(FL_THIN_UP_BOX)
                 cindex = 3*y + x
-                cbut.color(FloodWin.colors[cindex], FloodWin.colors[cindex])
+                cbut.color(self.colors[cindex], self.colors[cindex])
                 cbut.callback(self.flood, cindex)
 
         self.moves = Fl_Output(h+10, h-40, 70, 20)
@@ -60,22 +61,27 @@ class FloodWin(Fl_Window):
                 if self.cells[pos].color() == self.cells[cell].color():
                     self.flood(wid, cindex, pos)
 
-        self.cells[cell].color(FloodWin.colors[cindex])
+        self.cells[cell].color(self.colors[cindex])
         self.cells[cell].redraw()
         del self.check[-1]
 
         if len(set(c.color() for c in self.cells)) == 2:
-            fl_message("You win!")
             self.deactivate()
+            fl_message("You won in " + self.moves.value() + " moves!")
 
 
 def main():
-    size = int(argv[1]) if len(argv) > 1 else 15
-    size = 4 if size < 4 else size
-    randseed = argv[2] if len(argv) > 2 else str(randrange(1000000))
-    print "\nGrid size:", size, "\tSeed:", randseed
+    parser = ArgumentParser()
+    parser.add_argument("-s", "--size", default=15, type=int)
+    parser.add_argument("-e", "--seed", default=str(randrange(1000000)))
+    parser.add_argument("-t", "--theme", default="rainbow",
+                        choices=themes.themes.keys())
+    args = parser.parse_args()
+    args.size = 4 if args.size < 4 else args.size
 
-    win = FloodWin(size, randseed)
+    print "\nGrid size:", args.size, "\tSeed:", args.seed, "\n"
+
+    win = FloodWin(args.size, args.seed, args.theme)
     Fl.scheme("gtk+")
     win.show()
     Fl.run()
