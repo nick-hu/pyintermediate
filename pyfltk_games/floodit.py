@@ -72,16 +72,17 @@ class FloodWin(Fl_Window):
 
 def main():
     parser = ArgumentParser()
-    parser.add_argument("-s", "--size", default=15, type=int)
-    parser.add_argument("-e", "--seed", default=str(randrange(1000000)))
-    parser.add_argument("-t", "--theme", default="rainbow",
+    parser.add_argument("-size", default=15, type=int)
+    parser.add_argument("-gridseed", default=str(randrange(1000000)),
+                        help="seed to be used in grid generation")
+    parser.add_argument("-theme", default="rainbow",
                         choices=themes.themes.keys())
     args = parser.parse_args()
     args.size = 4 if args.size < 4 else args.size
 
-    print "\nGrid size:", args.size, "\tSeed:", args.seed, "\n"
+    print "\nGrid size:", args.size, "\tSeed:", args.gridseed, "\n"
 
-    win = FloodWin(args.size, args.seed, args.theme)
+    win = FloodWin(args.size, args.gridseed, args.theme)
     Fl.scheme("gtk+")
     win.show()
     Fl.run()
