@@ -15,28 +15,26 @@ class FloodWin(Fl_Window):
         self.colors = map(lambda rgb: fl_rgb_color(*rgb), self.colors)
         seed(randseed)
 
+        self.cells, self.check = [], []
         self.size, h = size, (size+2) * 20
         super(FloodWin, self).__init__(h + 90, h, "Floodit")
         self.color(FL_WHITE)
-
-        self.cells, self.check = [], []
 
         self.begin()
 
         for y in xrange(size + 2):
             for x in xrange(size + 2):
-                cell = Fl_Box(x * 20, y * 20, 20, 20)
-                cell.box(FL_FLAT_BOX)
-                cell.color(self.colors[randrange(6)])
+                self.cells.append(Fl_Box(x * 20, y * 20, 20, 20))
+                self.cells[-1].box(FL_FLAT_BOX)
+                self.cells[-1].color(self.colors[randrange(6)])
                 if y == 0 or y == size+1 or x == 0 or x == size+1:
-                    cell.color(fl_rgb_color(50, 50, 50))
-                self.cells.append(cell)
+                    self.cells[-1].color(fl_rgb_color(50, 50, 50))
 
         for y in xrange(2):
             for x in xrange(3):
+                cindex = 3 * y + x
                 cbut = Fl_Button(x*25 + h+10, y*25 + 20, 20, 20)
                 cbut.box(FL_THIN_UP_BOX)
-                cindex = 3*y + x
                 cbut.color(self.colors[cindex], self.colors[cindex])
                 cbut.callback(self.flood, cindex)
 
