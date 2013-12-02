@@ -2,6 +2,7 @@
 
 from random import seed, randrange
 from argparse import ArgumentParser
+from sys import setrecursionlimit
 
 from fltk import *
 
@@ -14,6 +15,7 @@ class FloodWin(Fl_Window):
         self.colors = themes.themes[theme]
         self.colors = map(lambda rgb: fl_rgb_color(*rgb), self.colors)
         seed(randseed)
+        setrecursionlimit(10**9)
 
         self.cells, self.check = [], []
         self.size, h = size, (size+2) * 20
@@ -26,9 +28,10 @@ class FloodWin(Fl_Window):
             for x in xrange(size + 2):
                 self.cells.append(Fl_Box(x * 20, y * 20, 20, 20))
                 self.cells[-1].box(FL_FLAT_BOX)
-                self.cells[-1].color(self.colors[randrange(6)])
                 if y == 0 or y == size+1 or x == 0 or x == size+1:
                     self.cells[-1].color(fl_rgb_color(50, 50, 50))
+                else:
+                    self.cells[-1].color(self.colors[randrange(6)])
 
         for y in xrange(2):
             for x in xrange(3):
@@ -65,6 +68,7 @@ class FloodWin(Fl_Window):
 
         if len(set(c.color() for c in self.cells)) == 2:
             self.deactivate()
+            fl_beep()
             fl_message("You won in " + self.moves.value() + " moves!")
 
 
