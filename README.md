@@ -8,9 +8,11 @@ Course contents and topics:
 
 oop: pyFLTK with object-oriented programming introduction
 
-pyfltk_games: Games made with pyFLTK (conway, floodit, etc.)
+pyfltk_games: Games made with pyFLTK (e.g. conway, floodit)
 
 pyfltk_intro: Introduction to pyFLTK
+
+pyfltk_net: Network programming with pyFLTK
 
 tests: Programs written for evaluation purposes for this course
 
