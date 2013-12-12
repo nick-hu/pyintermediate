@@ -23,17 +23,16 @@ class Chat(Fl_Window):
 
         self.send_addr, self.send_port = sys.argv[1:3]
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.fd = self.conn.fileno()
-        Fl.add_fd(self.fd, self.recv)
+        Fl.add_fd(self.conn.fileno(), self.recv)  # File descriptor
 
     def recv(self, fd):
         data, addr = self.conn.recvfrom(1024)
-        astr = "[" + addr[0] + ":" + str(addr[1]) + "] "
-        self.disp.add(astr + data)
+        astr = "@C220[{0}:{1}] {2}".format(addr[0], addr[1], data)
+        self.disp.add(astr)
 
     def send(self, wid):
         addr = (self.send_addr, int(self.send_port))
-        self.disp.add("[SELF] " + self.inp.value())
+        self.disp.add(self.inp.value())
         self.conn.sendto(self.inp.value(), addr)
         self.inp.value("")
 
