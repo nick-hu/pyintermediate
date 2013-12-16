@@ -28,27 +28,23 @@ class Chat(Fl_Window):
 
     def recv(self, fd):
         data, addr = self.conn.recvfrom(1024)
-        print data
         data = cPickle.loads(data)
-        print data
+
         if isinstance(data, list):
-            orig_len = len(self.send_addrs)
             self.send_addrs[1:] = data  # Don't overwrite original addr
-            new_len = len(self.send_addrs)
-            if (new_len > orig_len) and (self.disp.text(2)):
-                for addr in self.send_addrs[1:]:
-                    self.conn.sendto(cPickle.dumps(self.text), addr)
+            for addr in self.send_addrs[1:]:
+                self.conn.sendto(cPickle.dumps(self.text), addr)
         else:
             astr = "@C220[{0}:{1}] {2}".format(addr[0], addr[1], data)
             self.disp.add(astr)
-
-        print self.send_addrs
 
     def send(self, wid):
         self.text = self.inp.value()
         if not self.text:
             return
         self.inp.value("")
+
+
         for addr in self.send_addrs:
             self.conn.sendto(cPickle.dumps(self.text), addr)
         self.disp.add("[localhost] " + self.text)

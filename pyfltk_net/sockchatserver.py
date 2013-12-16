@@ -38,12 +38,12 @@ class Chat(Fl_Window):
                 info = "@C149@sClient connected from {0}:{1}"
             self.disp.add(info.format(addr[0], addr[1]))
 
-            for addr in self.addrs:
+            for caddr in self.addrs:
                 ns_addrs = self.addrs[:]
-                ns_addrs.remove(addr)  # Don't send client's own address
-                self.conn.sendto(cPickle.dumps((ns_addrs)), addr)
+                ns_addrs.remove(caddr)  # Don't send client's own address
+                self.conn.sendto(cPickle.dumps(ns_addrs), caddr)
 
-        elif data:
+        if data:
             data = cPickle.loads(data)
             astr = "@C220[{0}:{1}] {2}".format(addr[0], addr[1], data)
             self.disp.add(astr)
@@ -53,6 +53,7 @@ class Chat(Fl_Window):
         if not text:
             return
         self.inp.value("")
+
         if not self.addrs:
             self.disp.add("@s@iNo clients connected!")
         else:
