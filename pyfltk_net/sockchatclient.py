@@ -2,13 +2,14 @@
 
 import socket
 import sys
+import cPickle
 
 from fltk import *
 
 
 class Chat(Fl_Window):
     def __init__(self):
-        super(self.__class__, self).__init__(500, 500, "Socket chat")
+        super(self.__class__, self).__init__(500, 500, "SockChat Client")
         self.color(FL_WHITE)
         self.begin()
 
@@ -21,20 +22,36 @@ class Chat(Fl_Window):
 
         self.end()
 
-        self.send_addr, self.send_port = sys.argv[1:3]
+        self.send_addrs = [(sys.argv[1], int(sys.argv[2]))]
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         Fl.add_fd(self.conn.fileno(), self.recv)  # File descriptor
 
     def recv(self, fd):
         data, addr = self.conn.recvfrom(1024)
-        astr = "@C220[{0}:{1}] {2}".format(addr[0], addr[1], data)
-        self.disp.add(astr)
+        print data
+        data = cPickle.loads(data)
+        print data
+        if isinstance(data, list):
+            orig_len = len(self.send_addrs)
+            self.send_addrs[1:] = data  # Don't overwrite original addr
+            new_len = len(self.send_addrs)
+            if (new_len > orig_len) and (self.disp.text(2)):
+                for addr in self.send_addrs[1:]:
+                    self.conn.sendto(cPickle.dumps(self.text), addr)
+        else:
+            astr = "@C220[{0}:{1}] {2}".format(addr[0], addr[1], data)
+            self.disp.add(astr)
+
+        print self.send_addrs
 
     def send(self, wid):
-        addr = (self.send_addr, int(self.send_port))
-        self.disp.add(self.inp.value())
-        self.conn.sendto(self.inp.value(), addr)
+        self.text = self.inp.value()
+        if not self.text:
+            return
         self.inp.value("")
+        for addr in self.send_addrs:
+            self.conn.sendto(cPickle.dumps(self.text), addr)
+        self.disp.add("[localhost] " + self.text)
 
 
 def main():
@@ -43,6 +60,9 @@ def main():
     Fl.scheme("gtk+")
     win.show()
     Fl.run()
+
+    win.conn.sendto("", (sys.argv[1], int(sys.argv[2])))  # Notify server
+    win.conn.close()
 
 if __name__ == "__main__":
     main()

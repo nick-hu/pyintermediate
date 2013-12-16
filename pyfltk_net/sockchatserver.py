@@ -2,13 +2,14 @@
 
 import socket
 import sys
+import cPickle
 
 from fltk import *
 
 
 class Chat(Fl_Window):
     def __init__(self):
-        super(self.__class__, self).__init__(500, 500, "Socket chat")
+        super(self.__class__, self).__init__(500, 500, "SockChat Server")
         self.color(FL_WHITE)
         self.begin()
 
@@ -28,17 +29,36 @@ class Chat(Fl_Window):
 
     def recv(self, fd):
         data, addr = self.conn.recvfrom(1024)
-        if addr not in self.addrs:
-            self.addrs.append(addr)
-        astr = "@C220[{0}:{1}] {2}".format(addr[0], addr[1], data)
-        self.disp.add(astr)
+        if (not data) or (addr not in self.addrs):
+            if not data:  # Disconnect
+                self.addrs.remove(addr)
+                info = "@C9@sClient disconnected from {0}:{1}"
+            else:  # Connect
+                self.addrs.append(addr)
+                info = "@C149@sClient connected from {0}:{1}"
+            self.disp.add(info.format(addr[0], addr[1]))
+
+            for addr in self.addrs:
+                ns_addrs = self.addrs[:]
+                ns_addrs.remove(addr)  # Don't send client's own address
+                self.conn.sendto(cPickle.dumps((ns_addrs)), addr)
+
+        elif data:
+            data = cPickle.loads(data)
+            astr = "@C220[{0}:{1}] {2}".format(addr[0], addr[1], data)
+            self.disp.add(astr)
 
     def send(self, wid):
         text = self.inp.value()
+        if not text:
+            return
         self.inp.value("")
-        self.disp.add(text)
-        for addr in self.addrs:
-            self.conn.sendto(text, addr)
+        if not self.addrs:
+            self.disp.add("@s@iNo clients connected!")
+        else:
+            self.disp.add("[localhost] " + text)
+            for addr in self.addrs:
+                self.conn.sendto(cPickle.dumps(text), addr)
 
 
 def main():
@@ -47,6 +67,8 @@ def main():
     Fl.scheme("gtk+")
     win.show()
     Fl.run()
+
+    win.conn.close()
 
 if __name__ == "__main__":
     main()
