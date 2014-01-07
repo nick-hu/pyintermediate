@@ -44,7 +44,6 @@ class Chat(Fl_Window):
             return
         self.inp.value("")
 
-
         for addr in self.send_addrs:
             self.conn.sendto(cPickle.dumps(self.text), addr)
         self.disp.add("[localhost] " + self.text)
