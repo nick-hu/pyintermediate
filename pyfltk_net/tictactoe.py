@@ -9,7 +9,9 @@ from fltk import *
 
 class TicTacToe(Fl_Window):
     def __init__(self, letter):
-        super(self.__class__, self).__init__(335, 400, "Tic-Tac-Toe")
+        side = "X (Client)" if letter == "X" else "O (Server)"
+        side = "Tic-Tac-Toe: " + side
+        super(self.__class__, self).__init__(335, 335, side)
         self.color(FL_WHITE)
         self.begin()
 
@@ -26,6 +28,7 @@ class TicTacToe(Fl_Window):
                 cell.color(FL_WHITE)
                 cell.labelsize(64)
                 cell.labelfont(FL_HELVETICA_BOLD)
+                cell.labelcolor(fl_rgb_color(240, 60, 60))
                 cell.shortcut(str((3-y)*3 - 2 + x))
                 cell.callback(self.send, (x, y))
                 self.grid[-1].append(cell)
@@ -42,10 +45,20 @@ class TicTacToe(Fl_Window):
             self.conn.bind(("0.0.0.0", int(sys.argv[2])))
         Fl.add_fd(self.conn.fileno(), self.recv)
 
+        self.rcdpos = []
+        for rc in xrange(3):  # Row/column positions
+            self.rcdpos.append([(rc, n) for n in xrange(3)])
+            self.rcdpos.append([(n, rc) for n in xrange(3)])
+        self.rcdpos.append([(n, n) for n in xrange(3)])  # Diagonal positions
+        self.rcdpos.append([(n, 2-n) for n in xrange(3)])
+
     def send(self, wid, pos):
         x, y = pos
         if self.grid[y][x].label() or self.wait:
             return
+
+        if self.let == "O":
+            wid.labelcolor(fl_rgb_color(45, 150, 255))
         wid.label(self.let)
         self.conn.sendto(cPickle.dumps((self.let, x, y)), self.send_addr)
         self.wait = True
@@ -54,40 +67,31 @@ class TicTacToe(Fl_Window):
     def recv(self, fd):
         data, addr = self.conn.recvfrom(1024)
         let, x, y = cPickle.loads(data)
-        if not self.send_addr:
-            self.send_addr = addr
+        self.send_addr = addr
 
+        if let == "O":
+            self.grid[y][x].labelcolor(fl_rgb_color(45, 150, 255))
         self.grid[y][x].label(let)
         self.wait = False
         self.chkwin()
 
     def chkwin(self):
-        x_pos, o_pos = [(-1, -1)], [(-1, -1)]  # -1 is a placeholder value
-        for y in xrange(3):
-            for x in xrange(3):
-                if self.grid[y][x].label() == "X":
-                    x_pos.append((y, x))
-                if self.grid[y][x].label() == "O":
-                    o_pos.append((y, x))
-        print x_pos, o_pos
-        x_pos, o_pos = zip(*x_pos), zip(*o_pos)
-        print x_pos, o_pos
+        state, winner = [[c.label() for c in row] for row in self.grid], ""
+        for pos in self.rcdpos:
+            case = [state[y][x] for x, y in pos]
+            for let in ("X", "O"):
+                if case.count(let) == 3:
+                    winner = let
 
-        diag_win_x, diag_win_o = True, True
-        for rc in xrange(3):
-            for xy in xrange(2):
-                if x_pos[xy].count(rc) == 3:
-                    print "Win X"
-                if o_pos[xy].count(rc) == 3:
-                    print "Win O"
-                if rc not in x_pos[xy]:
-                    diag_win_x = False
-                if rc not in o_pos[xy]:
-                    diag_win_o = False
-
-        if diag_win_o:
-            print "Win O diag"
-
+        if winner:
+            if winner == self.let:
+                fl_alert(self.let + " wins! :)")
+            else:
+                fl_alert(self.let + " loses! :(")
+            self.wait = True  # Disable grid
+        if not winner and all(l for row in state for l in row):
+            fl_alert("Tie! :|")
+            self.wait = True
 
 
 def main():
