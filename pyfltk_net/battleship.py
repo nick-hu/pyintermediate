@@ -41,7 +41,7 @@ class BattleShip(Fl_Window):
         self.end()
         self.show()
 
-        self.wait = True
+        self.side, self.wait = side, True
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         if side == "c":
             self.send_addr = (sys.argv[2], int(sys.argv[3]))
@@ -68,7 +68,7 @@ class BattleShip(Fl_Window):
                     self.ogrid[y][x].value(1)
             self.endp = []
 
-        if not self.shipsizes and side == "c":
+        if not self.shipsizes and self.side == "c":
             self.wait = False
 
     def validship(self, x1, y1, x2, y2):
@@ -91,27 +91,68 @@ class BattleShip(Fl_Window):
             return spos
 
     def send(self, wid, pos):
-        if self.wait or self.grid[pos[1]][pos[0]].color() != self.colors[0]:
+        if self.shipsizes or self.wait:  # Not ready
+            return
+        if self.tgrid[pos[1]][pos[0]].color() != self.colors[0]:
             return
 
         self.sent_x, self.sent_y = pos
         self.conn.sendto(cPickle.dumps(pos), self.send_addr)
         self.wait = True
 
-    def recv(self):
+    def recv(self, fd):
         data, self.send_addr = self.conn.recvfrom(1024)
         d = cPickle.loads(data)
-        if isinstance(data, bool):
-            pass  # Update tgrid
-        elif isinstance(data, int):
-            pass  # Ship sunk alert
-        elif isinstance(data, str):
-            pass  # Win alert
+
+        if isinstance(d, bool):  # Update tgrid
+            infocolor = self.colors[3] if d else self.colors[4]
+            self.tgrid[self.sent_y][self.sent_x].color(infocolor)
+            self.tgrid[self.sent_y][self.sent_x].redraw()
+
+        elif isinstance(d, list):  # Ship sunk alert
+            for x, y in d:
+                self.tgrid[y][x].color(self.colors[3])
+                self.tgrid[y][x].label("X")
+            fl_alert("Sunk ship of length " + str(len(d)))
+
+        elif isinstance(d, str):  # Win alert
+            self.tgrid[self.sent_y][self.sent_x].color(self.colors[3])
+            fl_alert(d)
+
         else:
-            check = self.ogrid[d[1]][d[0]].value()
-            self.conn.sendto(cPickle.dumps(check))
-            if check:
-                self.ogrid[d[1]][d[0]].color(self.colors[3])
+            if self.shipsizes:  # Not ready
+                return
+
+            check = bool(self.ogrid[d[1]][d[0]].value())
+            infocolor = self.colors[3] if check else self.colors[4]
+            self.ogrid[d[1]][d[0]].color(infocolor, infocolor)
+            self.ogrid[d[1]][d[0]].redraw()
+            if not check:  # Miss
+                self.conn.sendto(cPickle.dumps(check), self.send_addr)
+                self.wait = False
+                return
+
+            shipstates = [p for ship in self.ships for p in ship]
+            shipstates = [self.ogrid[y][x].color() for x, y in shipstates]
+            if all(c == self.colors[3] for c in shipstates):
+                self.conn.sendto(cPickle.dumps("VICTORY!"), self.send_addr)
+                fl_alert("DEFEAT!")
+                return
+
+            for ship in self.ships:
+                if d in ship:
+                    shiphit = ship
+                    break
+            for x, y in shiphit:
+                if self.ogrid[y][x].color() != self.colors[3]:  # Hit
+                    self.conn.sendto(cPickle.dumps(check), self.send_addr)
+                    self.wait = False
+                    return  # If hit all, sink!
+            for x, y in shiphit:
+                self.ogrid[y][x].label("X")
+            self.conn.sendto(cPickle.dumps(shiphit), self.send_addr)
+            self.wait = False
+
 
 
 def main():
