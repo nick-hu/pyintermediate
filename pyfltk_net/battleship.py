@@ -9,8 +9,8 @@ from fltk import *
 
 class BattleShip(Fl_Window):
     def __init__(self, side):
-        self.colors = ((180, 225, 245), (0, 150, 215), (90, 90, 90),
-                       (210, 70, 70), (70, 210, 210))
+        self.colors = ((40, 125, 175), (50, 105, 165), (80, 80, 80),
+                       (240, 60, 60), (238, 243, 247), (93, 115, 142))
         self.colors = map(lambda rgb: fl_rgb_color(*rgb), self.colors)
         self.ships, self.shippos = [], []
         self.shipsizes, self.endp = [2, 3, 3, 4, 5], []
@@ -67,6 +67,7 @@ class BattleShip(Fl_Window):
                 self.shippos = [p for ship in self.ships for p in ship]
                 for x, y in ship:
                     self.ogrid[y][x].value(1)
+                    self.ogrid[y][x].color(self.colors[2], self.colors[2])
             self.endp = []
 
         if not self.shipsizes and self.side == "c":
@@ -107,12 +108,14 @@ class BattleShip(Fl_Window):
             self.tgrid[self.sent_y][self.sent_x].color(infocolor)
             self.tgrid[self.sent_y][self.sent_x].redraw()
 
-        elif isinstance(d, int):  # Ship sunk alert
-            self.tgrid[self.sent_y][self.sent_x].color(self.colors[3])
-            fl_alert("Sunk ship of length " + str(d))
+        elif isinstance(d, list):  # Ship sunk alert
+            for x, y in d:
+                self.tgrid[y][x].color(self.colors[5], self.colors[5])
+                self.tgrid[y][x].redraw()
+            fl_alert("Sunk ship of length " + str(len(d)))
 
         elif isinstance(d, str):  # Win alert
-            self.tgrid[self.sent_y][self.sent_x].color(self.colors[3])
+            self.tgrid[self.sent_y][self.sent_x].color(self.colors[5])
             fl_alert(d)
 
         else:
@@ -123,13 +126,6 @@ class BattleShip(Fl_Window):
             infocolor = self.colors[3] if check else self.colors[4]
             self.ogrid[d[1]][d[0]].color(infocolor, infocolor)
             self.ogrid[d[1]][d[0]].redraw()
-
-            shipstates = [self.ogrid[y][x].color() for x, y in self.shippos]
-            if all(c == self.colors[3] for c in shipstates):  # Win/loss
-                self.conn.sendto(cPickle.dumps("VICTORY!"), self.send_addr)
-                fl_alert("DEFEAT!")
-                self.wait = True
-                return
 
             if not check:  # Miss
                 self.conn.sendto(cPickle.dumps(check), self.send_addr)
@@ -143,7 +139,19 @@ class BattleShip(Fl_Window):
                         self.conn.sendto(cPickle.dumps(check), self.send_addr)
                         break
                 else:  # If hit all, sink!
-                    self.conn.sendto(cPickle.dumps(lship), self.send_addr)
+                    for x, y in shiphit:
+                        self.ogrid[y][x].color(self.colors[5], self.colors[5])
+                        self.ogrid[y][x].redraw()
+
+                    states = [self.ogrid[y][x].color() for x, y in self.shippos]
+                    if all(c == self.colors[5] for c in states):  # Win/loss
+                        vtext = "VICTORY!"
+                        self.conn.sendto(cPickle.dumps(vtext), self.send_addr)
+                        fl_alert("DEFEAT!")
+                        self.wait = True
+                        return
+                    else:  # Sink
+                        self.conn.sendto(cPickle.dumps(shiphit), self.send_addr)
             self.wait = False
 
 
