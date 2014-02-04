@@ -20,6 +20,8 @@ xpos, ypos = 100, 100
 speed = 0
 
 while True:
+    old_xpos, old_ypos = xpos, ypos
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit(0)
@@ -38,16 +40,16 @@ while True:
             if event.key in keys:
                 speed = 0
 
-        if xpos > 680:
-            xpos = 680
-        if ypos > 680:
-            ypos = 680
+    if not (20 <= xpos <= 680):
+        xpos = old_xpos
+    if not (20 <= ypos <= 480):
+        ypos = old_ypos
 
-        screen.fill(BLACK)
+    screen.fill(BLACK)
 
-        rec = pygame.draw.circle(screen, BLUE, (xpos, ypos), 20)
-        print rec
+    rec = pygame.draw.circle(screen, BLUE, (xpos, ypos), 20)
+    print rec, xpos, ypos
 
-        pygame.display.flip()  # Update display
+    pygame.display.flip()  # Update display
 
-        clock.tick(20)  # Frames per second (max. 60)
+    clock.tick(20)  # Frames per second (max. 60)
