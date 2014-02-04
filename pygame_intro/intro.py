@@ -4,7 +4,7 @@ import sys
 
 import pygame
 
-BLACK   = (0, 0, 0)
+BLACK   = (0, 0, 0)  # RGB colors
 WHITE   = (255, 255, 255)
 RED     = (255, 0, 0)
 GREEN   = (0, 255, 0)
@@ -16,11 +16,10 @@ pygame.display.set_caption("Intro Game")
 
 clock = pygame.time.Clock()
 keys = (pygame.K_RIGHT, pygame.K_LEFT, pygame.K_UP, pygame.K_DOWN)
-xpos, ypos = 100, 100
-speed = 0
+pos, speed = [100, 100], [0, 0]
 
 while True:
-    old_xpos, old_ypos = xpos, ypos
+    old_pos = pos[:]
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -28,27 +27,27 @@ while True:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
-                xpos += 10
+                speed[0] = 10
             elif event.key == pygame.K_LEFT:
-                xpos -= 10
+                speed[0] = -10
             elif event.key == pygame.K_DOWN:
-                ypos += 10
+                speed[1] = 10
             elif event.key == pygame.K_UP:
-                ypos -= 10
+                speed[1] = -10
 
         if event.type == pygame.KEYUP:
             if event.key in keys:
-                speed = 0
+                speed = [0, 0]
 
-    if not (20 <= xpos <= 680):
-        xpos = old_xpos
-    if not (20 <= ypos <= 480):
-        ypos = old_ypos
+    pos = [sum(i) for i in zip(pos, speed)]
 
-    screen.fill(BLACK)
+    if not (20 <= pos[0] <= 680) or not (20 <= pos[1] <= 480):
+        pos = old_pos
 
-    rec = pygame.draw.circle(screen, BLUE, (xpos, ypos), 20)
-    print rec, xpos, ypos
+    screen.fill(WHITE)
+
+    circle = pygame.draw.circle(screen, RED, pos, 20)
+    print pos, speed
 
     pygame.display.flip()  # Update display
 
