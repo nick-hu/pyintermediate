@@ -14,6 +14,8 @@ pyfltk_intro: Introduction to pyFLTK
 
 pyfltk_net: Network programming with pyFLTK
 
+pygame_intro: Introduction to pygame
+
 tests: Programs written for evaluation purposes for this course
 
 -
