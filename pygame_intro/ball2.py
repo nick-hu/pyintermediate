@@ -4,8 +4,8 @@ import sys
 
 import pygame
 
-WHITE   = (255, 255, 255)
-RED     = (255, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
 
 size = w, h = (500, 500)
 screen = pygame.display.set_mode(size)

@@ -5,6 +5,7 @@ from random import randrange
 
 import pygame
 
+
 size = w, h = (500, 500)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Ball 3")
