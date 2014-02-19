@@ -8,7 +8,7 @@ import pygame
 
 class Ball(object):
     def __init__(self, pos, rad=20):
-        self.rad = rad
+        self.rad = rad  # Rects drawn from top-left (c- rad)
         self.rect = pygame.Rect([c - rad for c in pos], (2 * rad, 2 * rad))
         self.vel = [randint(-2, 2), randint(-2, 2)]
 
@@ -35,15 +35,15 @@ while True:
     rectlist = [b.rect for b in balls]
     rmlist = set([])
 
-    for bn, ball in enumerate(balls):
+    for bn, ball in enumerate(balls):  # Find all collisions
         collidelist = set(ball.rect.collidelistall(rectlist))
         collidelist.remove(bn)
-        rmlist |= (collidelist)
+        rmlist |= (collidelist)  # Union of sets
 
     liveballs = [balls[bn] for bn in xrange(len(balls)) if bn not in rmlist]
     balls = liveballs
 
-    for ball in balls:
+    for ball in balls:  # Move balls
         ball.rect = ball.rect.move(*ball.vel)
 
         if ball.rect.left <= 20 or ball.rect.right >= 480:
@@ -54,7 +54,7 @@ while True:
     screen.fill((255, 255, 255))
 
     for ball in balls:
-        pos, rad = ball.rect.center, ball.rad
+        pos, rad = ball.rect.center, ball.rad  # Circles are drawn from center
         pygame.draw.circle(screen, ball.color, pos, rad)
 
     pygame.display.flip()  # Update display
