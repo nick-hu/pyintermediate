@@ -26,7 +26,6 @@ class Bullet(object):
 
         special = randint(1, 20)
         if special == 1:
-            print "!"
             self.vel = [2 * v for v in self.vel]
             self.color = (0, 50, 125)
 
