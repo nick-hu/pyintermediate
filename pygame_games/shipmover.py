@@ -10,13 +10,19 @@ import pygame
 
 
 class SpaceShip(object):
-    def __init__(self, img="ufo.png", pos=[100, 100], size=[50, 75]):
+    def __init__(self, img, pos=[100, 100], size=[50, 75]):
         self.img = pygame.image.load(img)
         self.img = pygame.transform.scale(self.img, size)
         self.rect = pygame.Rect((0, 0), size)
         self.rect.center = pos
         self.vel, self.avel = [0, 0], 0
         self.angle, self.rotation = 0, 0
+
+
+class UFO(SpaceShip):
+    def __init__(self, img=0, pos=[50, 50], size=[100, 100]):
+        img = ufo_pics[img]
+        super(self.__class__, self).__init__(img, pos, size)
 
 
 class Bullet(object):
@@ -33,9 +39,9 @@ def joystick_angle(x, y):
         return math.degrees(math.atan2(x, y))
 
 
-ports = [p for p in list_ports.grep("Arduino")]
+ports = [p for p in list_ports.grep(sys.argv[1])]
 if not ports:
-    raise IOError("Arduino serial port not found")
+    raise IOError("Port " + sys.argv[1] + " not found!")
 else:
     serial = Serial(ports[0][0], 19200)
 
@@ -50,6 +56,11 @@ clock = pygame.time.Clock()
 pygame.mouse.set_visible(0)
 
 ship = SpaceShip("resources/img/ship.png")
+ufo_pics = []
+for n in xrange(2):
+    ufo_pics.append("resources/img/ufo{0}.png".format(n))
+enemies = [UFO()]
+
 pygame.mixer.init()
 ship_laser = pygame.mixer.Sound("resources/sound/laser.ogg")
 bullets = []
@@ -57,6 +68,8 @@ can_fire = False  # Cannot press and hold fire
 
 while True:
     joy = [int(n) for n in serial.readline().split()]
+    if not joy or len(joy) != 3:
+        joy = [512, 512, 0]
     angle = joystick_angle(joy[0], joy[1])
 
     if angle is not None:
@@ -112,6 +125,9 @@ while True:
 
     screen.blit(rotufo, rotrect)
 
+    for enemy in enemies:
+        screen.blit(enemy.img, enemy.rect)
+
     pygame.display.flip()
 
-    # clock.tick(60)
+    clock.tick(200)
