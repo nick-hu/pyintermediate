@@ -61,6 +61,19 @@ class Bullet(object):
         self.color = color
 
         self.damage, self.enemy = 5, True
+        self.ptype = 0
+
+
+class PowerUp(Bullet):
+    def __init__(self, pos, size=[10, 10], ptype=1):
+        vel = [randint(-1, 1), randint(-1, 1)]
+        if ptype == 1:  # Scoreball
+            color = (230, 180, 0)
+        if ptype == 2:  # Healthball
+            color = (255, 50, 255)
+
+        super(self.__class__, self).__init__(pos, vel, size, color)
+        self.ptype = ptype
 
 
 def joystick_angle(x, y):
@@ -80,12 +93,13 @@ pygame.init()
 info = pygame.display.Info()
 size = w, h = info.current_w, info.current_h
 screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
-pygame.display.set_caption("Ship Mover")
+pygame.display.set_caption("Space Battle")
 srect = screen.get_rect()
 
 pygame.mouse.set_visible(0)
 
-ship = SpaceShip("resources/img/ship.png")
+ship = SpaceShip("resources/img/ship.png", [randint(0, w), randint(0, h)])
+ship.rect = ship.rect.clamp(srect)
 enemies = []
 
 ship_laser = pygame.mixer.Sound("resources/sound/laser.ogg")
@@ -95,6 +109,7 @@ ship_laser.set_volume(0.5)
 hitsound = pygame.mixer.Sound("resources/sound/hit.ogg")
 hitsound.set_volume(0.25)
 boom = pygame.mixer.Sound("resources/sound/explosion.ogg")
+coinsound = pygame.mixer.Sound("resources/sound/coin.ogg")
 pygame.mixer.music.load("resources/sound/space.ogg")
 pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)
@@ -115,15 +130,17 @@ while True:
         ship.health = 100
         score += (wave - 1) * 100
 
-        vbound = min(5, wave / 2)
-        frate = 100 - wave + (wave / 100) + 1
-        inacc = max(0, 30 - wave)
+        vbound = min(10, wave / 2)
+        frate = max(1, 50 - wave)
+        inacc = max(0, 50 - wave)
+        uhealth = 90 + 10 * wave
         for _ in xrange(wave / 5 + 1):
             pos = [randint(0, w), randint(0, h)]
             v = [randint(-vbound, vbound), randint(-vbound, vbound)]
             ufo = UFO("resources/img/ufo.png", pos)
             ufo.rect = ufo.rect.clamp(srect)
             ufo.vel, ufo.fire_rate, ufo.inacc = v, frate, inacc
+            ufo.health, ufo.max_health = uhealth, uhealth
             enemies.append(ufo)
 
     ### CONTROLLER ###
@@ -188,14 +205,22 @@ while True:
     for b in hit:
         bullet = bullets[b]
         if bullet.enemy and ship.health > 0:
+            if bullet.ptype:  # Powerup
+                ptype = bullet.ptype
+                if ptype == 1:
+                    score += 100
+                elif ptype == 2:
+                    ship.health += 20
+                coinsound.play()
+            else:  # Bullet
+                ship.health -= bullet.damage
+                score = max(0, score - bullet.damage)
+                hitsound.play()
+                if ship.health <= 0:
+                    pygame.mixer.music.fadeout(15000)
+                    enemies = []
+                    ship.img = pygame.image.load("resources/img/null.png")
             del_bullets.append(bullet)
-            ship.health -= bullet.damage
-            score = max(0, score - bullet.damage)
-            hitsound.play()
-            if ship.health <= 0:
-                pygame.mixer.music.fadeout(15000)
-                enemies = []
-                ship.img = pygame.image.load("resources/img/null.png")
 
     for enemy in enemies:
         hit = enemy.rect.collidelistall(bullets)
@@ -209,6 +234,10 @@ while True:
                 hitsound.play()
                 if enemy.health <= 0:
                     enemies.remove(enemy)
+                    for _ in xrange(randint(1, (wave / 10) + 1)):
+                        bullets.append(PowerUp(enemy.rect.center, ptype=1))
+                    for _ in xrange(randint(1, enemy.max_health / 50)):
+                        bullets.append(PowerUp(enemy.rect.center, ptype=2))
                     boom.play()
 
     bullets = [b for b in bullets if b not in del_bullets]
@@ -221,9 +250,16 @@ while True:
 
     for enemy in enemies:
         er = enemy.rect
-        hw = (float(enemy.health) / enemy.max_health) * er.width
+        hpercent = (float(enemy.health) / enemy.max_health)
+        hw = hpercent * er.width
+        if 0.2 <= hpercent < 0.5:
+            color = (255, 255, 50)
+        elif 0 < hpercent < 0.2:
+            color = (255, 0, 0)
+        else:
+            color = (0, 200, 0)
         hrect = pygame.Rect(er.left, er.top - 10, hw, 5)
-        pygame.draw.rect(screen, (0, 200, 0), hrect)
+        pygame.draw.rect(screen, color, hrect)
         screen.blit(enemy.img, enemy.rect)
 
     for bullet in bullets:
