@@ -71,6 +71,10 @@ class PowerUp(Bullet):
             color = (230, 180, 0)
         if ptype == 2:  # Healthball
             color = (255, 50, 255)
+        if ptype == 3:  # Critball
+            color = (0, 0, 255)
+        if ptype == 4:  # Invulnball
+            color = (255, 60, 0)
 
         super(self.__class__, self).__init__(pos, vel, size, color)
         self.ptype = ptype
@@ -115,7 +119,7 @@ pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)
 
 bullets = []
-hits, shots = 0, 0
+hits, shots, crit_start, invuln_start = 0, 0, 0, 0
 can_fire = False  # Cannot press and hold fire
 score, wave = 0, 0
 
@@ -143,6 +147,15 @@ while True:
             ufo.health, ufo.max_health = uhealth, uhealth
             enemies.append(ufo)
 
+    if randint(1, 500) == 1:
+        bullets.append(PowerUp([randint(0, w), randint(0, h)], ptype=1))
+    if randint(1, 1500) == 1:
+        bullets.append(PowerUp([randint(0, w), randint(0, h)], ptype=2))
+    if randint(1, 3500) == 1:
+        bullets.append(PowerUp([randint(0, w), randint(0, h)], ptype=3))
+    if randint(1, 4500) == 1:
+        bullets.append(PowerUp([randint(0, w), randint(0, h)], ptype=4))
+
     ### CONTROLLER ###
 
     try:
@@ -161,9 +174,16 @@ while True:
     if joy[2] and can_fire:
         bx_vel = ship.bvel * math.sin(math.radians(-ship.angle))
         by_vel = -ship.bvel * math.cos(math.radians(ship.angle))
+        if (ticks - crit_start) > 500:
+            crit_start = 0
+        if crit_start:
+            bx_vel, by_vel = 2 * bx_vel, 2 * by_vel
 
         b_vel = map(sum, zip([bx_vel, by_vel], ship.vel))
         b = Bullet(ship.rect.center, b_vel)
+        if crit_start:
+            b.color, b.damage = (0, 0, 200), 50
+
         b.enemy = False
         bullets.append(b)
         ship_laser.play()
@@ -211,8 +231,19 @@ while True:
                     score += 100
                 elif ptype == 2:
                     ship.health += 20
+                elif ptype == 3:
+                    crit_start = ticks
+                elif ptype == 4:
+                    invuln_start = ticks
                 coinsound.play()
             else:  # Bullet
+                if (ticks - invuln_start) > 1000:
+                    invuln_start = 0
+                if invuln_start:
+                    bullet.vel = [-n for n in bullet.vel]
+                    bullet.color = (200, 0, 0)
+                    bullet.enemy = False
+                    continue
                 ship.health -= bullet.damage
                 score = max(0, score - bullet.damage)
                 hitsound.play()

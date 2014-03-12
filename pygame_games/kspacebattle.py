@@ -74,8 +74,6 @@ class PowerUp(Bullet):
         self.ptype = ptype
 
 
-
-
 def joystick_angle(x, y):
     x, y = x - 512, -y + 512
     if (abs(x) > 20) or (abs(y) > 20):  # Movement
