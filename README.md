@@ -6,9 +6,10 @@ ICTP11B intermediate Python course :D
 Course contents and topics:
 ---------------------------
 
-ccc: Canadian Computing Competition 2014 original unmodified programs
-     All junior programs (j1-j5) are 15/15.
-     s1 and s2 are 15/15, s4 is 2/15.
+ccc: Canadian Computing Competition 2014 original unmodified programs.
+
+- All junior programs (j1-j5) are 15/15.
+- s1 and s2 are 15/15, s4 is 2/15.
 
 oop: pyFLTK with object-oriented programming introduction
 
