@@ -24,11 +24,6 @@ class Bullet(object):
         self.vel = vel
         self.color = color
 
-        special = randint(1, 20)
-        if special == 1:
-            self.vel = [2 * v for v in self.vel]
-            self.color = (0, 50, 125)
-
 
 size = w, h = (750, 750)
 screen = pygame.display.set_mode(size)
@@ -70,8 +65,14 @@ while True:
                 bx_vel = b_avel * math.sin(math.radians(angle))
                 by_vel = -b_avel * math.cos(math.radians(angle))
 
+                bcolor = (200, 0, 0)
+                special = randint(1, 20)
+                if special == 1:
+                    bx_vel, by_vel = 2 * bx_vel, 2 * by_vel
+                    bcolor = (0, 50, 125)
+
                 b_vel = map(sum, zip([bx_vel, by_vel], ship.vel))
-                b = Bullet(ship.rect.center, b_vel)
+                b = Bullet(ship.rect.center, b_vel, color=bcolor)
                 bullets.append(b)
 
     for bullet in bullets:
@@ -79,6 +80,7 @@ while True:
 
     x_vel = ship.avel * math.sin(math.radians(ship.angle))
     y_vel = ship.avel * math.cos(math.radians(ship.angle))
+
     ship.vel = [x_vel, y_vel]
 
     ship.rect = ship.rect.move(*ship.vel)
