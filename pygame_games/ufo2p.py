@@ -7,7 +7,8 @@ import pygame
 
 
 class Ship(pygame.sprite.Sprite):
-    def __init__(self, img="resources/img/ship.png", pos=[0, 0], size=[50, 75]):
+    def __init__(self, img="resources/img/ship.png",
+                 pos=[0, 0], size=[50, 75]):
         super(self.__class__, self).__init__()
 
         self.image = pygame.image.load(img)
@@ -32,6 +33,12 @@ p1, p2 = Ship(), Ship("resources/img/ufo.png", [100, 100], [120, 70])
 ents.add(p1, p2)
 maskcol = pygame.sprite.collide_mask
 
+p1_kmove = {pygame.K_RIGHT: [0, 5], pygame.K_LEFT: [0, -5],
+            pygame.K_DOWN: [1, 5], pygame.K_UP: [1, -5]}
+
+p2_kmove = {pygame.K_d: [0, 5], pygame.K_a: [0, -5],
+            pygame.K_s: [1, 5], pygame.K_w: [1, -5]}
+
 while True:
 
     for event in pygame.event.get():
@@ -39,29 +46,19 @@ while True:
             sys.exit(0)
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                p1.vel[0] = 5
-            if event.key == pygame.K_LEFT:
-                p1.vel[0] = -5
-            if event.key == pygame.K_DOWN:
-                p1.vel[1] = 5
-            if event.key == pygame.K_UP:
-                p1.vel[1] = -5
+            if event.key in p1_kmove:
+                d, v = p1_kmove[event.key]
+                p1.vel[d] = v
 
-            if event.key == pygame.K_d:
-                p2.vel[0] = 5
-            if event.key == pygame.K_a:
-                p2.vel[0] = -5
-            if event.key == pygame.K_s:
-                p2.vel[1] = 5
-            if event.key == pygame.K_w:
-                p2.vel[1] = -5
+            if event.key in p2_kmove:
+                d, v = p2_kmove[event.key]
+                p2.vel[d] = v
 
         if event.type == pygame.KEYUP:
-            if event.key in [pygame.K_d, pygame.K_a, pygame.K_s, pygame.K_w]:
-                p2.vel = [0, 0]
-            else:
+            if event.key in p1_kmove.iterkeys():
                 p1.vel = [0, 0]
+            else:
+                p2.vel = [0, 0]
 
     for ent in ents:
         oldrect = ent.rect

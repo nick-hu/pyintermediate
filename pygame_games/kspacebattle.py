@@ -137,7 +137,6 @@ pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)
 
 bullets = []
-for n in xrange(3, 7): bullets.append(PowerUp([500, 500], ptype=n))
 hits, shots = 0, 0
 crit_start, invuln_start, homing_start, speedy_start = 0, 0, 0, 0
 can_fire = False  # Cannot press and hold fire
