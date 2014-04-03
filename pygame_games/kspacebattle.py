@@ -86,12 +86,6 @@ class PowerUp(Bullet):
         self.ptype = ptype
 
 
-def joystick_angle(x, y):
-    x, y = x - 512, -y + 512
-    if (abs(x) > 20) or (abs(y) > 20):  # Movement
-        return math.degrees(math.atan2(x, y))
-
-
 def render_text(font, text, pos, color):
     lines = text.split("\n")
     center_x, center_y = pos
@@ -137,6 +131,7 @@ pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)
 
 bullets = []
+bullets.append(PowerUp([500, 500], ptype=6))
 hits, shots = 0, 0
 crit_start, invuln_start, homing_start, speedy_start = 0, 0, 0, 0
 can_fire = False  # Cannot press and hold fire
@@ -305,6 +300,8 @@ while True:
     rotrect = rotufo.get_rect()
     rotrect.center = ship.rect.center
 
+    if speedy_start and ship.avel:
+        ship.avel = 10 if ship.avel > 0 else -10
     x_vel = ship.avel * math.sin(math.radians(-ship.angle))
     y_vel = -ship.avel * math.cos(math.radians(ship.angle))
     ship.vel = [x_vel, y_vel]
