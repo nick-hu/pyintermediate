@@ -113,7 +113,7 @@ side = sys.argv[1]
 conn = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 conn.setblocking(0)
 if side == "s":
-    conn.bind(("192.168.1.84", int(sys.argv[2])))
+    conn.bind(("0.0.0.0", int(sys.argv[2])))
     addr = ()
 elif side == "c":
     addr = (sys.argv[2], int(sys.argv[3]))
