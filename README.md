@@ -6,10 +6,14 @@ ICTP11B intermediate Python course :D
 Course contents and topics:
 ---------------------------
 
-ccc: Canadian Computing Competition 2014 original unmodified programs.
+ccc: Canadian Computing Competition 2014 original unmodified programs
 
-- All junior programs (j1-j5) are 15/15.
-- s1 and s2 are 15/15, s4 is 2/15.
+- All junior programs (j1-j5) are 15/15
+- s1 and s2 are 15/15, s4 is 2/15
+
+networking: Asynchronous network I/O
+
+- Python 3.4+ required for asyncio servers
 
 oop: pyFLTK with object-oriented programming introduction
 
@@ -30,4 +34,8 @@ Notes:
 
 * All files are written in Python 2.7.5 unless otherwise specified
 
-* The code in this repository makes use of [pyFLTK](http://pyfltk.sourceforge.net/)
+* The code in this repository makes use of the following libraries:
+
+- [pyFLTK](http://pyfltk.sourceforge.net/)
+- [pygame](http://pygame.org/news.html)
+- [Twisted](http://twistedmatrix.com/trac/)
