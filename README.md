@@ -36,6 +36,6 @@ Notes:
 
 * The code in this repository makes use of the following libraries:
 
-- [pyFLTK](http://pyfltk.sourceforge.net/)
-- [pygame](http://pygame.org/news.html)
-- [Twisted](http://twistedmatrix.com/trac/)
+    - [pyFLTK](http://pyfltk.sourceforge.net/)
+    - [pygame](http://pygame.org/news.html)
+    - [Twisted](http://twistedmatrix.com/trac/)
