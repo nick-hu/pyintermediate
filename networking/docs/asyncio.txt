@@ -1,0 +1,9 @@
+ASYNCHRONOUS NETWORK I/O SOLUTIONS
+
+- FLTK file descriptors
+- Pygame event loop
+- Multithreading
+- Libraries: socket (low-level), select, poll/epoll
+- asyncore (high-level)
+- asyncio ? *NEW* (high-level)
+- Third-party libraries: twisted (high-level), tornado
