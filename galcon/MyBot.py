@@ -14,19 +14,19 @@ def DoTurn(pw):
     my_planets = pw.MyPlanets()
     for p in my_planets:
         score = float(p.NumShips())
-    if score > source_score:
-        source_score = score
-        source = p.PlanetID()
-        source_num_ships = p.NumShips()
+        if score > source_score:
+            source_score = score
+            source = p.PlanetID()
+            source_num_ships = p.NumShips()
 
     dest = -1
     dest_score = -999999.0
     not_my_planets = pw.NotMyPlanets()
     for p in not_my_planets:
         score = 1.0 / (1 + p.NumShips())
-    if score > dest_score:
-        dest_score = score
-        dest = p.PlanetID()
+        if score > dest_score:
+            dest_score = score
+            dest = p.PlanetID()
 
     if source >= 0 and dest >= 0:
         num_ships = source_num_ships / 2

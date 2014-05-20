@@ -11,6 +11,8 @@ ccc: Canadian Computing Competition 2014 original unmodified programs
 - All junior programs (j1-j5) are 15/15
 - s1 and s2 are 15/15, s4 is 2/15
 
+galcon: Planet Wars ([Galcon](http://www.galcon.com/)) AI based on [Google AI Challenge 2010](http://planetwars.aichallenge.org/index.php)
+
 networking: Asynchronous network I/O
 
 - Python 3.4+ required for asyncio servers
