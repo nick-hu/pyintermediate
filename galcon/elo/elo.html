@@ -1,0 +1,151 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module elo</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>elo</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"></a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#dict">__builtin__.dict</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="elo.html#ELODict">ELODict</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ELODict">class <strong>ELODict</strong></a>(<a href="__builtin__.html#dict">__builtin__.dict</a>)</font></td></tr>
+
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="elo.html#ELODict">ELODict</a></dd>
+<dd><a href="__builtin__.html#dict">__builtin__.dict</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ELODict-__init__"><strong>__init__</strong></a>(self, players<font color="#909090">=[]</font>, startrating<font color="#909090">=1500</font>, k<font color="#909090">=24</font>)</dt><dd><tt>Initialize&nbsp;an&nbsp;Elo&nbsp;dictionary.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+players&nbsp;--&nbsp;player&nbsp;name&nbsp;strings&nbsp;(default&nbsp;[])<br>
+startrating&nbsp;--&nbsp;initial&nbsp;player&nbsp;rating&nbsp;(default&nbsp;1500)<br>
+k&nbsp;--&nbsp;K-value&nbsp;for&nbsp;Elo&nbsp;algorithm&nbsp;(default&nbsp;24)</tt></dd></dl>
+
+<dl><dt><a name="ELODict-update_games"><strong>update_games</strong></a>(self, pA, pB, winsA, winsB, draws<font color="#909090">=0</font>)</dt><dd><tt>Update&nbsp;Elo&nbsp;ratings&nbsp;of&nbsp;two&nbsp;players.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+pA&nbsp;--&nbsp;player&nbsp;A's&nbsp;name&nbsp;string<br>
+pB&nbsp;--&nbsp;player&nbsp;B's&nbsp;name&nbsp;string<br>
+winsA&nbsp;--&nbsp;number&nbsp;of&nbsp;wins&nbsp;by&nbsp;player&nbsp;A<br>
+winsB&nbsp;--&nbsp;number&nbsp;of&nbsp;wins&nbsp;by&nbsp;player&nbsp;B<br>
+draws&nbsp;--&nbsp;number&nbsp;of&nbsp;draws&nbsp;(default&nbsp;0)</tt></dd></dl>
+
+<dl><dt><a name="ELODict-win_prob"><strong>win_prob</strong></a>(self, pA, pB)</dt><dd><tt>Calculate&nbsp;win&nbsp;probability&nbsp;of&nbsp;two&nbsp;players&nbsp;against&nbsp;each&nbsp;other.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
+<dl><dt><a name="ELODict-__cmp__"><strong>__cmp__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__cmp__">__cmp__</a>(y)&nbsp;&lt;==&gt;&nbsp;cmp(x,y)</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-__contains__">__contains__</a>(k)&nbsp;-&gt;&nbsp;True&nbsp;if&nbsp;D&nbsp;has&nbsp;a&nbsp;key&nbsp;k,&nbsp;else&nbsp;False</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#ELODict-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="ELODict-__sizeof__"><strong>__sizeof__</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-__sizeof__">__sizeof__</a>()&nbsp;-&gt;&nbsp;size&nbsp;of&nbsp;D&nbsp;in&nbsp;memory,&nbsp;in&nbsp;bytes</tt></dd></dl>
+
+<dl><dt><a name="ELODict-clear"><strong>clear</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-clear">clear</a>()&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Remove&nbsp;all&nbsp;items&nbsp;from&nbsp;D.</tt></dd></dl>
+
+<dl><dt><a name="ELODict-copy"><strong>copy</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-copy">copy</a>()&nbsp;-&gt;&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="ELODict-fromkeys"><strong>fromkeys</strong></a>(...)</dt><dd><tt><a href="__builtin__.html#dict">dict</a>.<a href="#ELODict-fromkeys">fromkeys</a>(S[,v])&nbsp;-&gt;&nbsp;New&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;with&nbsp;keys&nbsp;from&nbsp;S&nbsp;and&nbsp;values&nbsp;equal&nbsp;to&nbsp;v.<br>
+v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="ELODict-get"><strong>get</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-get">get</a>(k[,d])&nbsp;-&gt;&nbsp;D[k]&nbsp;if&nbsp;k&nbsp;in&nbsp;D,&nbsp;else&nbsp;d.&nbsp;&nbsp;d&nbsp;defaults&nbsp;to&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="ELODict-has_key"><strong>has_key</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-has_key">has_key</a>(k)&nbsp;-&gt;&nbsp;True&nbsp;if&nbsp;D&nbsp;has&nbsp;a&nbsp;key&nbsp;k,&nbsp;else&nbsp;False</tt></dd></dl>
+
+<dl><dt><a name="ELODict-items"><strong>items</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-items">items</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;(key,&nbsp;value)&nbsp;pairs,&nbsp;as&nbsp;2-tuples</tt></dd></dl>
+
+<dl><dt><a name="ELODict-iteritems"><strong>iteritems</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-iteritems">iteritems</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;(key,&nbsp;value)&nbsp;items&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="ELODict-iterkeys"><strong>iterkeys</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-iterkeys">iterkeys</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;keys&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="ELODict-itervalues"><strong>itervalues</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-itervalues">itervalues</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;values&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="ELODict-keys"><strong>keys</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-keys">keys</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;keys</tt></dd></dl>
+
+<dl><dt><a name="ELODict-pop"><strong>pop</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-pop">pop</a>(k[,d])&nbsp;-&gt;&nbsp;v,&nbsp;remove&nbsp;specified&nbsp;key&nbsp;and&nbsp;return&nbsp;the&nbsp;corresponding&nbsp;value.<br>
+If&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;d&nbsp;is&nbsp;returned&nbsp;if&nbsp;given,&nbsp;otherwise&nbsp;KeyError&nbsp;is&nbsp;raised</tt></dd></dl>
+
+<dl><dt><a name="ELODict-popitem"><strong>popitem</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-popitem">popitem</a>()&nbsp;-&gt;&nbsp;(k,&nbsp;v),&nbsp;remove&nbsp;and&nbsp;return&nbsp;some&nbsp;(key,&nbsp;value)&nbsp;pair&nbsp;as&nbsp;a<br>
+2-tuple;&nbsp;but&nbsp;raise&nbsp;KeyError&nbsp;if&nbsp;D&nbsp;is&nbsp;empty.</tt></dd></dl>
+
+<dl><dt><a name="ELODict-setdefault"><strong>setdefault</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-setdefault">setdefault</a>(k[,d])&nbsp;-&gt;&nbsp;D.<a href="#ELODict-get">get</a>(k,d),&nbsp;also&nbsp;set&nbsp;D[k]=d&nbsp;if&nbsp;k&nbsp;not&nbsp;in&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="ELODict-update"><strong>update</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-update">update</a>([E,&nbsp;]**F)&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Update&nbsp;D&nbsp;from&nbsp;<a href="__builtin__.html#dict">dict</a>/iterable&nbsp;E&nbsp;and&nbsp;F.<br>
+If&nbsp;E&nbsp;present&nbsp;and&nbsp;has&nbsp;a&nbsp;.<a href="#ELODict-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;E[k]<br>
+If&nbsp;E&nbsp;present&nbsp;and&nbsp;lacks&nbsp;.<a href="#ELODict-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(k,&nbsp;v)&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;v<br>
+In&nbsp;either&nbsp;case,&nbsp;this&nbsp;is&nbsp;followed&nbsp;by:&nbsp;for&nbsp;k&nbsp;in&nbsp;F:&nbsp;D[k]&nbsp;=&nbsp;F[k]</tt></dd></dl>
+
+<dl><dt><a name="ELODict-values"><strong>values</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-values">values</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;values</tt></dd></dl>
+
+<dl><dt><a name="ELODict-viewitems"><strong>viewitems</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-viewitems">viewitems</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;object&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;items</tt></dd></dl>
+
+<dl><dt><a name="ELODict-viewkeys"><strong>viewkeys</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-viewkeys">viewkeys</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;object&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;keys</tt></dd></dl>
+
+<dl><dt><a name="ELODict-viewvalues"><strong>viewvalues</strong></a>(...)</dt><dd><tt>D.<a href="#ELODict-viewvalues">viewvalues</a>()&nbsp;-&gt;&nbsp;an&nbsp;object&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;values</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#ELODict-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

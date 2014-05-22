@@ -16,6 +16,11 @@ b1arg = " ".join(b1com) + " " + abspath(b1arg)
 b2arg = " ".join(b2com) + " " + abspath(b2arg)
 
 win1, win2, draw, other = 0, 0, 0, 0
+if len(sys.argv) >= 5:
+    logfile = open(sys.argv[4], "w")
+    logging = True
+else:
+    logging = False
 
 for m in maps:
     proc = sub.Popen(["java", "-jar", "tools/PlayGame.jar", m,
@@ -26,15 +31,26 @@ for m in maps:
 
     if "Player 1 Wins!" in err:
         win1 += 1
+        winner = "P1"
     elif "Player 2 Wins!" in err:
         win2 += 1
+        winner = "P2"
     elif "Draw!" in err:
         draw += 1
+        winner = "Draw"
     else:
-        err += 1
+        other += 1
+        winner = "Unknown"
 
     msg = """P1 Wins: {0}\tP2 Wins: {1}\tDraws: {2}\tOther: {3}"""
     sys.stdout.write("\r" + msg.format(win1, win2, draw, other))
     sys.stdout.flush()
 
+    if logging:
+        turns = [l.strip() for l in err.split("\n")][-3][5:]
+        msg = "Map {0}: {1} after {2} turns\n"
+        logfile.write(msg.format(m, winner, turns))
+
 print "\n"
+if logging:
+    logfile.close()
