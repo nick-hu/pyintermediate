@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+import sys
+import os
+import subprocess as sub
+
 from PlanetWars import PlanetWars
 
 
@@ -33,7 +37,7 @@ def turn(pw):
             dplanet = pw.GetPlanet(dID)
             dd = pw.Distance(pID, dplanet.PlanetID())
             stp = dplanet.NumShips() - p.GrowthRate() * dd
-            stable_pops[pID] = max(stp, base_pop)
+            stable_pops[pID] = max(stp / 2, base_pop)
 
     values = {}
     for p in pw.NotMyPlanets():
@@ -42,13 +46,22 @@ def turn(pw):
             value += 50
         values[p.PlanetID()] = value
 
+    under_attack = [ef.DestinationPlanet() for ef in pw.EnemyFleets()]
+    #print [p for p in under_attack]
+
     forces = {}
     for p in pw.MyPlanets():
-        force = p.NumShips() - stable_pops[p.PlanetID()]
-        if force > 0:
-            forces[p.PlanetID()] = force
+        pID = p.PlanetID()
+        force = p.NumShips() - stable_pops[pID]
+        if force > p.GrowthRate() and (pID not in under_attack):
+            forces[pID] = force
+        else:
+            forces[pID] = 0
 
+    dests = (f.DestinationPlanet() for f in pw.MyFleets())
     for target in sorted(values, key=lambda p: values[p], reverse=True):
+        if target in dests:
+            continue
         tp = pw.GetPlanet(target)
         dists = {}
         for p in forces:
@@ -82,6 +95,14 @@ def getforces(tp, forces, dists, sps):
 
 
 def main():
+    sys.stdout = os.fdopen(1, "w", 0)  # Unbuffer stdout
+
+    tee = sub.Popen(["tee", "log2.txt"], stdin=sub.PIPE)
+    """Redirect and close stdout and sterr. tee will allow
+    them to be passed out to the viewer."""
+    os.dup2(tee.stdin.fileno(), sys.stdout.fileno())
+    os.dup2(tee.stdin.fileno(), sys.stderr.fileno())
+
     map_data = ""
     while True:
         current_line = raw_input()

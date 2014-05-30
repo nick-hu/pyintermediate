@@ -17,7 +17,6 @@ def turn(pw):
     enemy_pop = sum(p.NumShips() for p in enemy_planets)
     enemy_avg = enemy_pop / len(enemy_planets)
 
-    # stable_pop = enemy_avg ** 0.3
     stable_pop = 0.02 * enemy_avg + 2.4
 
     moves = {}
@@ -36,8 +35,8 @@ def turn(pw):
 
             if p.Owner() == 2:
                 force += d * g
-                begin = len(enemy_planets) == 1 and len(pw.MyPlanets()) <= 2
-                if (m.NumShips() >= enemy_pop) and begin and 5 <= d <= 21:
+                begin = len(enemy_planets) == 1 and len(pw.MyPlanets()) <= 3
+                if (m.NumShips() >= enemy_pop - 10) and begin and 5 <= d <= 21:
                     new_sp = (enemy_avg ** 0.33) / 2
                     force = m.NumShips() - new_sp
                     blitz = True
@@ -45,7 +44,7 @@ def turn(pw):
             if (m.NumShips() - int(force) + 1 < stable_pop) and not blitz:
                 continue
 
-            value = 2*g**2 + 10.0/(n + 1) - d
+            value = 3*g**2 + 10.0/(n + 1) - d**2
             if blitz:
                 value += 5000
             #print (mID, pID, force), value
@@ -88,13 +87,13 @@ def turn(pw):
 
 
 def main():
-
+    """
     sys.stdout = os.fdopen(sys.stdout.fileno(), "w", 0)  # Unbuffer stdout
 
     tee = sub.Popen(["tee", "log2.txt"], stdin=sub.PIPE)
     os.dup2(tee.stdin.fileno(), sys.stdout.fileno())
     os.dup2(tee.stdin.fileno(), sys.stderr.fileno())
-
+    """
     map_data = ""
     while True:
         current_line = raw_input()
