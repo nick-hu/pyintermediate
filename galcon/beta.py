@@ -49,15 +49,19 @@ def turn(pw):
                 best_move, best_value = (mID, pID, force), value
 
         for ef in pw.EnemyFleets():
+            if ef.NumShips() <= p.GrowthRate():
+                continue
+
             dest = pw.GetPlanet(ef.DestinationPlanet())
             dID = dest.PlanetID()
-            if dID == mID:
+            d, g, n = pw.Distance(mID, dID), dest.GrowthRate(), dest.NumShips()
+            future_pop = (n + d * g) - ef.NumShips()
+
+            if dID == mID and future_pop < stable_pop:
                 danger = True
                 break
-            d, g, n = pw.Distance(mID, dID), dest.GrowthRate(), dest.NumShips()
 
             if dest.Owner() == 1:
-                future_pop = (n + d * g) - ef.NumShips()
                 if d < ef.TurnsRemaining() and future_pop < stable_pop:
                     force = int(stable_pop - future_pop) + 1
                     if m.NumShips() - force < stable_pop:
