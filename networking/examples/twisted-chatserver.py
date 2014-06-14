@@ -7,7 +7,6 @@ telnet clients to port 1234
 from twisted.protocols import basic
 
 
-
 class MyChat(basic.LineReceiver):
     def connectionMade(self):
         print "Got new client!"

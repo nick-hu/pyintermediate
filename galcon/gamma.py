@@ -81,8 +81,6 @@ def turn(pw, penalty):
         if best_move:
             moves[best_move] = best_value
 
-    #print moves
-
     panic = 0
     dests = [f.DestinationPlanet() for f in pw.MyFleets()]
     for move in sorted(moves, key=lambda mv: moves[mv], reverse=True):
@@ -98,6 +96,8 @@ def turn(pw, penalty):
 
 
 def main():
+
+    # Uncomment below for debugging
     """
     sys.stdout = os.fdopen(sys.stdout.fileno(), "w", 0)  # Unbuffer stdout
 
@@ -121,4 +121,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

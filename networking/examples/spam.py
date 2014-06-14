@@ -18,4 +18,3 @@ while True:
         sock.send(text)
     except socket.error:
         pass
-

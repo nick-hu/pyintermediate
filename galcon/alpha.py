@@ -47,7 +47,7 @@ def turn(pw):
             value = 3*g**2 + 10.0/(n + 1) - d**2
             if blitz:
                 value += 5000
-            #print (mID, pID, force), value
+
             if (best_move is None) or (value > best_value):
                 best_move, best_value = (mID, pID, force), value
 
@@ -79,8 +79,6 @@ def turn(pw):
         if best_move:
             moves[best_move] = best_value
 
-    #print moves
-
     dests = [f.DestinationPlanet() for f in pw.MyFleets()]
     for move in sorted(moves, key=lambda mv: moves[mv], reverse=True):
         if move[1] not in dests:
@@ -91,6 +89,8 @@ def turn(pw):
 
 
 def main():
+
+    # Uncomment below for debugging
     """
     sys.stdout = os.fdopen(sys.stdout.fileno(), "w", 0)  # Unbuffer stdout
 
@@ -98,6 +98,7 @@ def main():
     os.dup2(tee.stdin.fileno(), sys.stdout.fileno())
     os.dup2(tee.stdin.fileno(), sys.stderr.fileno())
     """
+
     map_data = ""
     while True:
         current_line = raw_input()

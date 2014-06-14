@@ -41,8 +41,7 @@ def turn(pw):
                 continue
 
             value = g**2 - n - d**2
-            #with open("log2.txt", "a") as f:
-            #    f.write(str((mID, pID, force)) + " " + str(value) + "\n")
+
             if blitz:
                 value += 5000
             if (best_move is None) or (value > best_value):
@@ -75,9 +74,6 @@ def turn(pw):
 
         if best_move:
             moves[best_move] = value
-
-    #with open("log2.txt", "a") as f:
-    #    f.write(str(moves) + "\n")
 
     dests = [f.DestinationPlanet() for f in pw.MyFleets()]
     for move in sorted(moves, key=lambda mv: moves[mv], reverse=True):
