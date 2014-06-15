@@ -131,10 +131,8 @@ pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)
 
 bullets = []
-bullets.append(PowerUp([500, 500], ptype=6))
 hits, shots = 0, 0
 crit_start, invuln_start, homing_start, speedy_start = 0, 0, 0, 0
-can_fire = False  # Cannot press and hold fire
 score, wave = 0, 0
 
 dfont = pygame.font.Font("resources/fonts/mc.ttf", 24)
@@ -170,7 +168,7 @@ while True:
                 ship.rotation = 0
             if event.key == pygame.K_LEFT:
                 ship.rotation = 0
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE and ship.health > 0:
                 angle = -ship.angle
                 bx_vel = ship.bvel * math.sin(math.radians(angle))
                 by_vel = -ship.bvel * math.cos(math.radians(angle))
@@ -209,6 +207,7 @@ while True:
             break
 
     ## WAVES ###
+
     if not enemies and ship.health > 0:
         wave, wstart = wave + 1, ticks
         ship.health = max(ship.max_health, ship.health)
@@ -258,14 +257,16 @@ while True:
     if randint(1, 3500) == 1:
         bullets.append(PowerUp([randint(0, w), randint(0, h)], ptype=6))
 
-    if (ticks - crit_start) > 500:
+    slow_down = False
+    if (ticks - crit_start) > 500 and crit_start:
         crit_start = 0
-    if (ticks - invuln_start) > 700:
+    if (ticks - invuln_start) > 700 and invuln_start:
         invuln_start = 0
-    if (ticks - homing_start) > 700:
+    if (ticks - homing_start) > 700 and homing_start:
         homing_start = 0
-    if (ticks - speedy_start) > 1000:
+    if (ticks - speedy_start) > 1000 and speedy_start:
         speedy_start = 0
+        slow_down = True
 
     ### MOVEMENT ###
 
@@ -302,6 +303,8 @@ while True:
 
     if speedy_start and ship.avel:
         ship.avel = 10 if ship.avel > 0 else -10
+    elif slow_down:
+        ship.avel = 5 if ship.avel > 0 else -5
     x_vel = ship.avel * math.sin(math.radians(-ship.angle))
     y_vel = -ship.avel * math.cos(math.radians(ship.angle))
     ship.vel = [x_vel, y_vel]
@@ -457,7 +460,6 @@ while True:
     if not ship.health:
         endtext = "GAME OVER"
         render_text(dfont, endtext, srect.center, (255, 255, 255))
-        can_fire = False
 
     pygame.display.flip()
 

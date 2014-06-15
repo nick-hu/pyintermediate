@@ -233,13 +233,13 @@ while True:
     if randint(1, 3500) == 1:
         bullets.append(PowerUp([randint(0, w), randint(0, h)], ptype=6))
 
-    if (ticks - crit_start) > 500:
+    if (ticks - crit_start) > 500 and crit_start:
         crit_start = 0
-    if (ticks - invuln_start) > 700:
+    if (ticks - invuln_start) > 700 and invuln_start:
         invuln_start = 0
-    if (ticks - homing_start) > 700:
+    if (ticks - homing_start) > 700 and homing_start:
         homing_start = 0
-    if (ticks - speedy_start) > 1000:
+    if (ticks - speedy_start) > 1000 and speedy_start:
         speedy_start = 0
 
     ### CONTROLLER ###
