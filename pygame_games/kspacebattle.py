@@ -134,6 +134,7 @@ bullets = []
 hits, shots = 0, 0
 crit_start, invuln_start, homing_start, speedy_start = 0, 0, 0, 0
 score, wave = 0, 0
+firing = False
 
 dfont = pygame.font.Font("resources/fonts/mc.ttf", 24)
 
@@ -158,6 +159,8 @@ while True:
                 ship.rotation = -2
             if event.key == pygame.K_LEFT:
                 ship.rotation = 2
+            if event.key == pygame.K_SPACE and ship.health > 0:
+                firing = True
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
@@ -168,25 +171,28 @@ while True:
                 ship.rotation = 0
             if event.key == pygame.K_LEFT:
                 ship.rotation = 0
-            if event.key == pygame.K_SPACE and ship.health > 0:
-                angle = -ship.angle
-                bx_vel = ship.bvel * math.sin(math.radians(angle))
-                by_vel = -ship.bvel * math.cos(math.radians(angle))
-                if crit_start and not homing_start:
-                    bx_vel, by_vel = 2 * bx_vel, 2 * by_vel
+            if event.key == pygame.K_SPACE:
+                firing = False
 
-                b_vel = map(sum, zip([bx_vel, by_vel], ship.vel))
-                b = Bullet(ship.rect.center, b_vel)
-                if crit_start:
-                    b.color, b.damage = (0, 0, 200), 10 * ship.bdmg
-                if homing_start:
-                    b.color, b.damage = (255, 125, 0), 2 * ship.bdmg
-                    b.homing, b.birth = True, ticks
+    if firing and (ticks % 10 == 0) and ship.health:
+        angle = -ship.angle
+        bx_vel = ship.bvel * math.sin(math.radians(angle))
+        by_vel = -ship.bvel * math.cos(math.radians(angle))
+        if crit_start and not homing_start:
+            bx_vel, by_vel = 2 * bx_vel, 2 * by_vel
 
-                b.enemy = False
-                bullets.append(b)
-                shots += 1
-                ship_laser.play()
+        b_vel = map(sum, zip([bx_vel, by_vel], ship.vel))
+        b = Bullet(ship.rect.center, b_vel)
+        if crit_start:
+            b.color, b.damage = (0, 0, 200), 10 * ship.bdmg
+        if homing_start:
+            b.color, b.damage = (255, 125, 0), 2 * ship.bdmg
+            b.homing, b.birth = True, ticks
+
+        b.enemy = False
+        bullets.append(b)
+        shots += 1
+        ship_laser.play()
 
     ship.angle += ship.rotation
 

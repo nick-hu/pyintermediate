@@ -148,8 +148,8 @@ pygame.mixer.music.play(-1)
 bullets = []
 hits, shots = 0, 0
 crit_start, invuln_start, homing_start, speedy_start = 0, 0, 0, 0
-can_fire = False  # Cannot press and hold fire
 score, wave = 0, 0
+firing = False
 
 dfont = pygame.font.Font("resources/fonts/mc.ttf", 24)
 
@@ -247,6 +247,7 @@ while True:
     try:
         joy = [int(n) for n in serial.readline().split()]
         assert len(joy) == 3
+        firing = joy[2]
     except:
         joy = [512, 512, 0]
     angle = joystick_angle(joy[0], joy[1])
@@ -257,7 +258,7 @@ while True:
     else:
         ship.avel = 0
 
-    if joy[2] and can_fire:
+    if firing and (ticks % 10 == 0) and ship.health:
         bx_vel = ship.bvel * math.sin(math.radians(-ship.angle))
         by_vel = -ship.bvel * math.cos(math.radians(ship.angle))
         if crit_start and not homing_start:
@@ -275,10 +276,6 @@ while True:
         bullets.append(b)
         ship_laser.play()
         shots += 1
-        can_fire = False
-
-    if not joy[2]:
-        can_fire = True
 
     ### MOVEMENT ###
 
@@ -468,7 +465,6 @@ while True:
     if not ship.health:
         endtext = "GAME OVER"
         render_text(dfont, endtext, srect.center, (255, 255, 255))
-        can_fire = False
 
     pygame.display.flip()
 
